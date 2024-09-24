@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}Ken's Pages{% endblock %}
+
+{% block header %}
+<header class="masthead"
+        style="background-image: url({% static 'assets/img/home-bg.jpg' %})">
+  <div class="container position-relative px-4 px-lg-5">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+      <div class="col-md-10 col-lg-8 col-xl-7">
+        <div class="site-heading">
+          <h1>Ken's Blog</h1>
+          <span class="subheading">
+            A blog Theme by Start Bootstrap
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+{% endblock %}
+
+{% block content %}
+<section>
+  <div class="container px-4 px-lg-5">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+      <div class="col-md-10 col-lg-8 col-xl-7">
+        {% for record in orderby_records %}
+          <div class="post-preview">
+            <a href="#">
+              <h2 class="post-title">
+              <a href="{% url 'blog:blog_detail' record.pk %}">{{ record.title }}</a></h2>
+              url {% url 'blog:blog_detail' record.pk %}
+              <h3 class="post-subtitle">
+                <span style="font-size : 14pt">
+                  {{ record.content|truncatechars:50 }}
+                </span>
+              </h3>
+            </a>
+            <p class="post-meta">
+              Posted at {{ record.created_at }}
+              {% if record.is_updated %}
+                </br>Updated at {{ record.updated_at }}
+              {% endif %}
+            </p>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

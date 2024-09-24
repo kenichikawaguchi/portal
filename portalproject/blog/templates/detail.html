@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}Ken's Pages{% endblock %}
+
+{% block header %}
+<header class="masthead"
+        style="background-image: url({% static 'assets/img/post-bg.jpg' %})">
+  <div class="container position-relative px-4 px-lg-5">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+      <div class="col-md-10 col-lg-8 col-xl-7">
+        <div class="site-heading">
+          <h1>Ken's Blog</h1>
+          <span class="subheading">
+            <h1>{{ object.title }}</h1>
+            <h2>{{ object.content|truncatechars:30 }}</h2>
+            <span class="meta">
+              <a href={% url 'blog:index' %}>Ken's Blog</a>
+              Posted at (( object.created_at }}
+            </span>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+{% endblock %}
+
+{% block content %}
+<article class="mb-4">
+  <div class="container px-4 px-lg-5">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+      <div class="col-md-10 col-lg-8 col-xl-7">
+        <p>{{ object.content }}</p>
+        {% if object.photo %}
+          <img src="{{ MEDIA_URL }}{{ object.photo }}" width="300">
+        {% endif %}
+        {% if object.photo2 %}
+          <img src="{{ MEDIA_URL }}{{ object.photo2 }}" width="300">
+        {% endif %}
+        {% if object.photo3 %}
+          <img src="{{ MEDIA_URL }}{{ object.photo3 }}" width="300">
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</article>
+
+<hr>
+
+{% endblock %}

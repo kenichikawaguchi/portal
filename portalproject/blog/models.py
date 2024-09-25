@@ -46,4 +46,4 @@ class Tag(models.Model):
         db_table = "tags"
 
     def __str__(self):
-        return f'{self.pk} {self.title}'
+        return f'{self.pk} {self.name}'

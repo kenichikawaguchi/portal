@@ -15,10 +15,6 @@
           <span class="subheading">
             <h1>{{ object.title }}</h1>
             <h2>{{ object.content|truncatechars:30 }}</h2>
-            <span class="meta">
-              <a href={% url 'blog:index' %}>Ken's Blog</a>
-              Posted at (( object.created_at }}
-            </span>
           </span>
         </div>
       </div>
@@ -32,6 +28,7 @@
   <div class="container px-4 px-lg-5">
     <div class="row gx-4 gx-lg-5 justify-content-center">
       <div class="col-md-10 col-lg-8 col-xl-7">
+        <p>{{ object.created_at }}</p>
         <p>{{ object.content }}</p>
         {% if object.photo %}
           <img src="{{ MEDIA_URL }}{{ object.photo }}" width="300">
@@ -42,6 +39,9 @@
         {% if object.photo3 %}
           <img src="{{ MEDIA_URL }}{{ object.photo3 }}" width="300">
         {% endif %}
+        <span class="meta">
+          <a href={% url 'blog:index' %}>Ken's Blog</a>
+        </span>
       </div>
     </div>
   </div>

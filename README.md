@@ -36,6 +36,7 @@
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/othneildrew
 [django-shield]: https://img.shields.io/badge/-Django-092E20.svg?style=for-the-badge&logo=django
+[django-url]: https://www.djangoproject.com/
 
 
 [product-screenshot]: images/screenshot.png

@@ -37,6 +37,11 @@
                   {{ record.content|truncatechars:50 }}
                 </span>
               </h3>
+                <p style="font-size : 10pt">
+                {% for tag in record.tags.all %}
+                  {{ tag.name }}
+                {% endfor %}
+                </p>
             </a>
             <p class="post-meta">
               Posted at {{ record.created_at }}

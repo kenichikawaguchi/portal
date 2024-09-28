@@ -37,7 +37,7 @@ DB_USER = env('DB_USER')
 DB_PASSWORD = env('DB_PASSWORD')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env.bool('DEBUG', default=True)
 
 ALLOWED_HOSTS = []
 
@@ -198,5 +198,5 @@ EMAIL_HOST = env('EMAIL_HOST')
 EMAIL_PORT = env('EMAIL_PORT', int)
 EMAIL_HOST_USER = env('EMAIL_HOST_USER', str)
 EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
-EMAIL_USE_TLS = env('EMAIL_USE_TLS') == "True"
+EMAIL_USE_TLS = env.bool('EMAIL_USE_TLS')
 

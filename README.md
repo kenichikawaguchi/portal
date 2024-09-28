@@ -1,3 +1,4 @@
+<a id="readme-top"></a>
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
@@ -10,6 +11,45 @@ This section should list any major frameworks/libraries used to bootstrap your p
 * [![Django][django-shield]][django-url]
 * [![Bootstrap][Bootstrap.com]][Bootstrap-url]
 
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+<!-- GETTING STARTED -->
+## Getting Started
+
+This is an example of how you may utilize this project in your environment.
+
+### Installation
+
+_Below is the instruction for installing and setting up your app._
+
+1. Clone the repo
+   ```sh
+   git clone https://github.com/kenichikawaguchi/portal.git
+   ```
+2. Install NPM packages
+   ```sh
+   npm install
+   ```
+4. Enter your API in `config.js`
+   ```js
+   const API_KEY = 'ENTER YOUR API';
+   ```
+5. Change git remote url to avoid accidental pushes to base project
+   ```sh
+   git remote set-url origin github_username/repo_name
+   git remote -v # confirm the changes
+   ```
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+<!-- LICENSE -->
+## License
+
+Distributed under the MIT License. See `LICENSE.txt` for more information.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
 <!-- MARKDOWN LINKS & IMAGES -->

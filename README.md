@@ -1,5 +1,3 @@
-# SPDX-FileCopyrightText: 2024 Kenichi Kawaguchi <corgi@m.gmail.com>
-# SPDX-License-Identifier: MIT
 <img src="https://img.shields.io/badge/-Django-092E20.svg?logo=django&style=flat">
 
 

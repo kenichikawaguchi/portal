@@ -17,7 +17,13 @@
 [![Issues][issues-shield]][issues-url]
 [![MIT License][license-shield]][license-url]
 [![LinkedIn][linkedin-shield]][linkedin-url]
-[![Django][django-shield]][django-url]
+
+### Built With
+
+This section should list any major frameworks/libraries used to bootstrap your project. Leave any add-ons/plugins for the acknowledgements section. Here are a few examples.
+
+* [![Django][django-shield]][django-url]
+* [![Bootstrap][Bootstrap.com]][Bootstrap-url]
 
 
 

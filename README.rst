@@ -33,6 +33,7 @@ Below is the instruction for installing and setting up your app.
 .. code-block:: sh
 
   DEBUG=True (or False)
+  HOSTS='<ALLOWED_HOSTS>'
   DB_USER='<DB_USER>'
   DB_PASSWORD='<DB_PASSWORD>'
   SECRET_KEY='<SECRET_KEY>'

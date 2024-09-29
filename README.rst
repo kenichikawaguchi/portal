@@ -11,11 +11,17 @@ Installation
 Below is the instruction for installing and setting up your app.
 
 1. Clone the repo
+.. code-block:: sh
   $ git clone https://github.com/kenichikawaguchi/portal.git
   $ cd portal
+.. ***
+
 2. Install PyPy packages
+.. code-block:: sh
   $ pip install -r requirements.txt
   $ cd portalproject
+.. ***
+
 3. Enter your Email, Password, etc. in `.env`
   - DEBUG=True (or False)
   - DB_USER='<DB_USER>'

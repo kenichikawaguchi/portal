@@ -50,4 +50,4 @@ Below is the instruction for installing and setting up your app.
 License
 =======
 
-Distributed under the MIT License. See `LICENSE.txt` for more information.
+Distributed under the MIT License. See `LICENSE.txt <./LICENSE>`_ for more information.

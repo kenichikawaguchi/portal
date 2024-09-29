@@ -39,7 +39,9 @@ DB_PASSWORD = env('DB_PASSWORD')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool('DEBUG', default=True)
 
-ALLOWED_HOSTS = []
+HOST_LIST = env.get_value("HOSTS", list)
+
+ALLOWED_HOSTS = HOST_LIST
 
 
 # Application definition
@@ -96,7 +98,7 @@ WSGI_APPLICATION = 'portalproject.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'portal',
+        'NAME': 'portal_production',
         'USER': DB_USER,
         'PASSWORD': DB_PASSWORD,
         'HOST': '',
@@ -151,8 +153,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'accounts.CustomUser'
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_URL = '/media/'
+if DEBUG == True:
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+    MEDIA_URL = '/media/'
+else:
+    MEDIA_ROOT = '/usr/share/nginx/html/media'
+    STATIC_ROOT = '/usr/share/nginx/html/static'
 
 LOGGING = {
     'version': 1,

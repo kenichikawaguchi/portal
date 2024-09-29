@@ -11,17 +11,12 @@ Installation
 Below is the instruction for installing and setting up your app.
 
 1. Clone the repo
-  ``
   $ git clone https://github.com/kenichikawaguchi/portal.git
   $ cd portal
-  ``
 2. Install PyPy packages
-  ```sh
   $ pip install -r requirements.txt
   $ cd portalproject
-  ```
 3. Enter your Email, Password, etc. in `.env`
-  ```py
   DEBUG=True (or False)
   DB_USER='<DB_USER>'
   DB_PASSWORD='<DB_PASSWORD>'
@@ -34,7 +29,6 @@ Below is the instruction for installing and setting up your app.
   EMAIL_HOST_USER=admin@example.com
   DEFAULT_FROM_EMAIL=admin@example.com
   EMAIL_HOST_PASSWORD='admin_email_password'
-  ```
 
 License
 =======

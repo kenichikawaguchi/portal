@@ -11,10 +11,10 @@ Installation
 Below is the instruction for installing and setting up your app.
 
 1. Clone the repo
-  ```sh
+  ``
   $ git clone https://github.com/kenichikawaguchi/portal.git
   $ cd portal
-  ```
+  ``
 2. Install PyPy packages
   ```sh
   $ pip install -r requirements.txt

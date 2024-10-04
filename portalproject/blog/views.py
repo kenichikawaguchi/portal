@@ -1,13 +1,17 @@
 from django.conf import settings
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, CreateView, TemplateView
 from .models import BlogPost
 
 from django.views.generic import FormView
 from django.urls import reverse_lazy
 
-from .forms import ContactForm
+from .forms import ContactForm, BlogPostForm
 from django.contrib import messages
 from django.core.mail import EmailMessage
+
+from django.utils.decorators import method_decorator
+
+from django.contrib.auth.decorators import login_required
 
 
 class IndexView(ListView):
@@ -52,3 +56,19 @@ class ContactView(FormView):
         return super().form_valid(form)
 
 
+@method_decorator(login_required,name='dispatch')
+class CreateBlogPostView(CreateView):
+    form_class = BlogPostForm
+    template_name = "post.html"
+
+    success_url = reverse_lazy('blog:post_done')
+
+    def form_valid(self, form):
+        postdata = form.save(commit=False)
+        postdata.user = self.request.user
+        postdata.save()
+
+        return super().form_valid(form)
+
+class PostSuccessView(TemplateView):
+    template_name = "post_success.html"

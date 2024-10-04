@@ -1,4 +1,5 @@
 from django import forms
+from .models import BlogPost
 
 
 class ContactForm(forms.Form):
@@ -24,3 +25,10 @@ class ContactForm(forms.Form):
         self.fields['message'].widget.attrs['placeholder']\
             = "Please input your message."
         self.fields['message'].widget.attrs['class'] = 'form-control'
+
+
+class BlogPostForm(forms.ModelForm):
+    class Meta:
+        model = BlogPost
+        fields = ["title", "content", "photo", "photo2", "photo3"]
+

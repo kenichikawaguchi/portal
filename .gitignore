@@ -160,3 +160,4 @@ cython_debug/
 #.idea/
 
 startbootstrap-clean-blog-gh-pages
+media/

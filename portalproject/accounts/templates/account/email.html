@@ -1,5 +1,10 @@
 {% extends "account/base_manage_email.html" %}
 {% load allauth i18n %}
+{% block header %}
+  <h1>
+    {% trans "Email Addresses" %}
+  </h1>
+{% endblock %}
 {% block head_title %}
     {% trans "Email Addresses" %}
 {% endblock head_title %}

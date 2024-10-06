@@ -1,5 +1,10 @@
 {% extends "account/base_manage.html" %}
 {% load allauth i18n %}
+{% block header %}
+  <h1>
+    {% trans "Log Out" %}
+  </h1>
+{% endblock header %}
 {% block head_title %}
     {% trans "Sign Out" %}
 {% endblock head_title %}

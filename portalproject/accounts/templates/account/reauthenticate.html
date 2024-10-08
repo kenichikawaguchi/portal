@@ -1,6 +1,11 @@
 {% extends "account/base_reauthenticate.html" %}
 {% load allauth %}
 {% load i18n %}
+{% block header %}
+  <h1>
+    {% trans "Reauthenticate" %}
+  </h1>
+{% endblock %}
 {% block reauthenticate_content %}
     {% element p %}
         {% blocktranslate %}Enter your password:{% endblocktranslate %}

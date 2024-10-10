@@ -163,9 +163,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'accounts.CustomUser'
 
+MEDIA_URL = '/media/'
+
 if DEBUG == True:
     MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-    MEDIA_URL = '/media/'
 else:
     MEDIA_ROOT = '/usr/share/nginx/html/media'
     STATIC_ROOT = '/usr/share/nginx/html/static'

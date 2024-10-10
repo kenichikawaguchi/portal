@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}Ken's Pages{% endblock %}
+
+{% block header %}
+  <span class="subheading">
+    <h1>Delete "{{ object.title }}"</h1>
+  </span>
+{% endblock %}
+
+{% block content %}
+  {% if user == object.user %}
+  <form method="POST">
+    {% csrf_token %}
+    <p>Are you sure to delete the post?</p>
+    <button class="btn btn-primary my-2" type="submit">Delete</button>
+    <a class="btn btn-secondary my-2" href="{% url 'blog:blog_detail' object.pk %}">Cancel</a>
+  </form>
+
+  {% else %}
+    <p>You have no right to delete this content. This is not your content.</p>
+  {% endif %}
+{% endblock %}

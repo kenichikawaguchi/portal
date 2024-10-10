@@ -33,7 +33,8 @@
                 </p>
             </a>
             <p class="post-meta">
-              Posted at {{ record.created_at }}
+              Posted by {{ record.user }}
+              </br>Posted at {{ record.created_at }}
               {% if record.is_updated %}
                 </br>Updated at {{ record.updated_at }}
               {% endif %}

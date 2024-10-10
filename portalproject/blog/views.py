@@ -2,7 +2,7 @@ from django.conf import settings
 from django.views.generic import ListView, DetailView, CreateView, TemplateView
 from .models import BlogPost
 
-from django.views.generic import FormView
+from django.views.generic import FormView, DeleteView, UpdateView
 from django.urls import reverse_lazy
 
 from .forms import ContactForm, BlogPostForm
@@ -61,7 +61,32 @@ class CreateBlogPostView(CreateView):
     form_class = BlogPostForm
     template_name = "post.html"
 
-    success_url = reverse_lazy('blog:post_done')
+    def form_valid(self, form):
+        postdata = form.save(commit=False)
+        postdata.user = self.request.user
+        postdata.save()
+
+        return super().form_valid(form)
+
+@method_decorator(login_required,name='dispatch')
+class PostSuccessView(TemplateView):
+    template_name = "post_success.html"
+
+
+@method_decorator(login_required,name='dispatch')
+class BlogDeleteView(DeleteView):
+    model = BlogPost
+    template_name = "delete.html"
+    success_url = reverse_lazy('blog:index')
+
+    def delete(self, request, *args, **kwargs):
+        return super().delete(request, *args, **kwargs)
+
+@method_decorator(login_required,name='dispatch')
+class UpdateBlogPostView(UpdateView):
+    model = BlogPost
+    form_class = BlogPostForm
+    template_name = "update.html"
 
     def form_valid(self, form):
         postdata = form.save(commit=False)
@@ -70,5 +95,3 @@ class CreateBlogPostView(CreateView):
 
         return super().form_valid(form)
 
-class PostSuccessView(TemplateView):
-    template_name = "post_success.html"

@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}Ken's Pages | Update{% endblock %}
+
+{% block header %}
+  <h1>Update Post</h1>
+  <span class="subheading">Update the post.</span>
+{% endblock %}
+
+{% block content %}
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <table>
+      <tr>
+        <th>Title</th>
+        <td>{{ form.title }}</td>
+      </tr>
+      <tr>
+        <th>Content</th>
+        <td>{{ form.content }}</td>
+      </tr>
+      <tr>
+        <th>Photo</th>
+        <td>{{ form.photo }}</td>
+      </tr>
+      <tr>
+        <th>Photo2</th>
+        <td>{{ form.photo2 }}</td>
+      </tr>
+      <tr>
+        <th>Photo3</th>
+        <td>{{ form.photo3 }}</td>
+      </tr>
+    </table>
+    <hr>
+    <button type="submit">Save</button>
+  </form>
+
+  <hr>
+
+{% endblock %}

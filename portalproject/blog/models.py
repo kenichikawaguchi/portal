@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 from accounts.models import CustomUser
 
 
@@ -24,6 +25,8 @@ class BlogPost(models.Model):
             return False
         return True
 
+    def get_absolute_url(self):
+        return reverse("blog:blog_detail", kwargs={"pk": self.pk})
 
 class Comment(models.Model):
     text = models.TextField(verbose_name="Comment", blank=False)

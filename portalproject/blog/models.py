@@ -3,25 +3,29 @@ from django.urls import reverse
 from accounts.models import CustomUser
 from uuid import uuid4
 import os
+from imagekit.models import ImageSpecField, ProcessedImageField
+from imagekit.processors import ResizeToFill
 
 
-def rename_image(path):
-    def wrapper(instance, filename):
-        ext = filename.split('.')[-1]
-        filename = '{}.{}'.format(uuid4().hex, ext)
-        return os.path.join(path, filename)
-    return wrapper
+def rename_image(instance, filename):
+    ext = filename.split('.')[-1]
+    filename = '{}.{}'.format(uuid4().hex, ext)
+    return filename
 
 
 class BlogPost(models.Model):
     user = models.ForeignKey(CustomUser, verbose_name="Author", on_delete=models.PROTECT)
     title = models.CharField(verbose_name="Title", max_length=200)
     content = models.TextField(verbose_name="Content")
-    photo = models.ImageField(verbose_name="Photo", upload_to=rename_image(''), blank=True, null=True)
-    photo2 = models.ImageField(verbose_name="Photo2", upload_to=rename_image(''), blank=True, null=True)
-    photo3 = models.ImageField(verbose_name="Photo3", upload_to=rename_image(''), blank=True, null=True)
+    photo = models.ImageField(verbose_name="Photo", upload_to=rename_image, blank=True, null=True)
+    photo2 = models.ImageField(verbose_name="Photo2", upload_to=rename_image, blank=True, null=True)
+    photo3 = models.ImageField(verbose_name="Photo3", upload_to=rename_image, blank=True, null=True)
     created_at = models.DateTimeField(verbose_name="Created at", auto_now_add=True)
     updated_at = models.DateTimeField(verbose_name="Updated at", auto_now=True)
+
+    photo_small = ImageSpecField(source="photo", processors=[ResizeToFill(200, 200)], format="JPEG")
+    photo2_small = ImageSpecField(source="photo2", processors=[ResizeToFill(200, 200)], format="JPEG")
+    photo3_small = ImageSpecField(source="photo3", processors=[ResizeToFill(200, 200)], format="JPEG")
 
     class Meta:
         db_table = "blogposts"

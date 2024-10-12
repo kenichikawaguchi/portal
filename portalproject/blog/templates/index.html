@@ -26,11 +26,32 @@
                   {{ record.content|truncatechars:50 }}
                 </span>
               </h3>
-                <p style="font-size : 10pt">
-                {% for tag in record.tags.all %}
-                  {{ tag.name }}
-                {% endfor %}
-                </p>
+              {% if record.photo or record.photo2 or record.photo3 %}
+              <div class="row">
+                {% if record.photo %}
+                  <div class="col-md">
+                    <img src="{{ record.photo_small.url }}" width="200">
+                  </div>
+                {% endif %}
+                {% if record.photo2 %}
+                  <div class="col-md">
+                    <img src="{{ record.photo2_small.url }}" width="200">
+                  </div>
+                {% endif %}
+                {% if record.photo3 %}
+                  <div class="col-md">
+                    <img src="{{ record.photo3_small.url }}" width="200">
+                  </div>
+                {% endif %}
+              </div>
+              {% endif %}
+                {% if record.tags.all %}
+                  <p style="font-size : 10pt">
+                  {% for tag in record.tags.all %}
+                    {{ tag.name }}
+                  {% endfor %}
+                  </p>
+                {% endif %}
             </a>
             <p class="post-meta">
               Posted by {{ record.user }}

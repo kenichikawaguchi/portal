@@ -24,14 +24,23 @@
       <tr>
         <th>Photo</th>
         <td>{{ form.photo }}</td>
+        {% if object.photo_small %}
+        <td><img src="{{ object.photo_small.url }}" width="100"></td>
+        {% endif %}
       </tr>
       <tr>
         <th>Photo2</th>
         <td>{{ form.photo2 }}</td>
+        {% if object.photo2_small %}
+        <td><img src="{{ object.photo2_small.url }}" width="100"></td>
+        {% endif %}
       </tr>
       <tr>
         <th>Photo3</th>
         <td>{{ form.photo3 }}</td>
+        {% if object.photo3_small %}
+        <td><img src="{{ object.photo3_small.url }}" width="100"></td>
+        {% endif %}
       </tr>
     </table>
     <hr>

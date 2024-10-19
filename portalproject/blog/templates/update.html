@@ -10,41 +10,50 @@
 {% endblock %}
 
 {% block content %}
-  <form method="POST" enctype="multipart/form-data">
+  <form class="formUpdate" method="POST" enctype="multipart/form-data">
     {% csrf_token %}
-    <table>
-      <tr>
-        <th>Title</th>
-        <td>{{ form.title }}</td>
-      </tr>
-      <tr>
-        <th>Content</th>
-        <td>{{ form.content }}</td>
-      </tr>
-      <tr>
-        <th>Photo</th>
-        <td>{{ form.photo }}</td>
-        {% if object.photo_small %}
-        <td><img src="{{ object.photo_small.url }}" width="100"></td>
-        {% endif %}
-      </tr>
-      <tr>
-        <th>Photo2</th>
-        <td>{{ form.photo2 }}</td>
-        {% if object.photo2_small %}
-        <td><img src="{{ object.photo2_small.url }}" width="100"></td>
-        {% endif %}
-      </tr>
-      <tr>
-        <th>Photo3</th>
-        <td>{{ form.photo3 }}</td>
-        {% if object.photo3_small %}
-        <td><img src="{{ object.photo3_small.url }}" width="100"></td>
-        {% endif %}
-      </tr>
+    <table class="table">
+      <tbody>
+        <tr>
+          <th>{{ form.title.label }}</th>
+          <td colspan="2">{{ form.title }}</td>
+        </tr>
+        <tr>
+          <th>{{ form.content.label }}</th>
+          <td colspan="2">{{ form.content }}</td>
+        </tr>
+        <tr>
+          <th>{{ form.photo.label }}</th>
+          {% if form.photo %}
+          <td>{{ form.photo }}</td>
+          <td><img src="{{ form.photo.value.url }}" width="150"></td>
+          {% else %}
+          <td colspan="2">{{ form.photo }}</td>
+          {% endif %}
+        </tr>
+        <tr>
+          <th>{{ form.photo2.label }}</th>
+          {% if form.photo2.value %}
+          <td>{{ form.photo2 }}</td>
+          <td><img src="{{ form.photo2.value.url }}" width="150"></td>
+          {% else %}
+          <td colspan="2">{{ form.photo2 }}</td>
+          {% endif %}
+        </tr>
+        <tr>
+          <th>{{ form.photo3.label }}</th>
+          {% if form.photo3.value %}
+          <td>{{ form.photo3 }}</td>
+          <td><img src="{{ form.photo3.value.url }}" width="150"></td>
+          {% else %}
+          <td colspan="2">{{ form.photo3 }}</td>
+          {% endif %}
+        </tr>
+      </tbody>
     </table>
-    <hr>
-    <button type="submit">Save</button>
+    <div class="form-group text-right" style="padding:20px 0">
+      <input type="submit" value="Submit" class="btn btn-primary" />
+    </div>
   </form>
 
   <hr>

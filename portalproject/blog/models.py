@@ -25,13 +25,6 @@ def delete_previous_file(function):
 
         if previous:
             if previous.photo:
-                print("previous.photo.name:{}".format(previous.photo.name))
-                print("previous.photo_small.name:{}".format(previous.photo_small.name))
-                print("previous.photo.path_dirname:{}".format(os.path.dirname(previous.photo.path)))
-                print("previous.photo_small.path_dirname:{}".format(os.path.dirname(previous.photo_small.path)))
-                print("previous.photo.path:{}".format(previous.photo.path))
-                print("previous.photo_small.path:{}".format(previous.photo_small.path))
-
                 if current.photo == None or previous.photo != current.photo:
                     os.remove(previous.photo.path)
                     os.remove(previous.photo_small.path)

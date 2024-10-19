@@ -26,24 +26,39 @@ def delete_previous_file(function):
         if previous:
             if previous.photo:
                 if current.photo == None or previous.photo != current.photo:
+                    if previous.photo_small:
+                        os.remove(previous.photo_small.path)
                     os.remove(previous.photo.path)
-                    os.remove(previous.photo_small.path)
+                    try:
+                        os.rmdir(os.path.dirname(previous.photo.path))
+                    except OSError as e:
+                        pass
                     try:
                         os.rmdir(os.path.dirname(previous.photo_small.path))
                     except OSError as e:
                         pass
             if previous.photo2:
                 if current.photo2 == None or previous.photo2 != current.photo2:
+                    if previous.photo2_small:
+                        os.remove(previous.photo2_small.path)
                     os.remove(previous.photo2.path)
-                    os.remove(previous.photo2_small.path)
+                    try:
+                        os.rmdir(os.path.dirname(previous.photo2.path))
+                    except OSError as e:
+                        pass
                     try:
                         os.rmdir(os.path.dirname(previous.photo2_small.path))
                     except OSError as e:
                         pass
             if previous.photo3:
                 if current.photo3 == None or previous.photo3 != current.photo3:
+                    if previous.photo3_small:
+                        os.remove(previous.photo3_small.path)
                     os.remove(previous.photo3.path)
-                    os.remove(previous.photo3_small.path)
+                    try:
+                        os.rmdir(os.path.dirname(previous.photo3.path))
+                    except OSError as e:
+                        pass
                     try:
                         os.rmdir(os.path.dirname(previous.photo3_small.path))
                     except OSError as e:

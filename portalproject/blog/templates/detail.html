@@ -17,7 +17,7 @@
     <p>not your content</p>
   {% endif %}
   <div class="row mb-2">
-    {{ object.content }}
+    {{ object.content|linebreaksbr }}
   </div>
   {% if object.photo or object.photo2 or object.photo3 %}
     <div class="row">

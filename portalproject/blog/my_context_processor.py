@@ -2,5 +2,7 @@ from django.conf import settings
 
 
 def common(request):
-    return {"site_title": settings.TITLE}
+    return {"site_title": settings.TITLE,
+            "favicon": settings.FAVICON,
+           }
 

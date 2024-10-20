@@ -250,3 +250,8 @@ ACCOUNT_LOGOUT_REDIRECT_URL = 'account_login'
 
 ACCOUNT_LOGOUT_ON_GET = False
 
+if env.get_value('FAVICON', default=None):
+    FAVICON = env('FAVICON')
+else:
+    FAVICON = "assets/favicon.ico"
+

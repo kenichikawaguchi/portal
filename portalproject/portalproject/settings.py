@@ -173,6 +173,13 @@ else:
     MEDIA_ROOT = '/usr/share/nginx/html/media'
     STATIC_ROOT = '/usr/share/nginx/html/static'
 
+    if env.get_value('STATIC_ROOT', default=None):
+        STATIC_ROOT = env('STATIC_ROOT')
+
+    if env.get_value('MEDIA_ROOT', default=None):
+        MEDIA_ROOT = env('MEDIA_ROOT')
+
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,

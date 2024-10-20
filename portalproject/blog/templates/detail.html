@@ -2,7 +2,7 @@
 
 {% load static %}
 
-{% block title %}Ken's Pages{% endblock %}
+{% block title %}{{ site_title }}{% endblock %}
 
 {% block header %}
   <span class="subheading">
@@ -54,7 +54,7 @@
   </div>
 <hr>
   <span class="meta mb-2">
-    <a href={% url 'blog:index' %}>Ken's Blog</a>
+    <a href={% url 'blog:index' %}>{{ site_title }}</a>
   </span>
 
 <hr>

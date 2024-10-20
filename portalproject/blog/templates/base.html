@@ -24,7 +24,7 @@
     <nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
       <div class="container px-4 px-lg-5">
         <a class="navbar-brand"
-          href={% url 'blog:index' %}>Ken's Blog</a>
+          href={% url 'blog:index' %}>{{ site_title }}</a>
         <button class="navbar-toggler"
                 type="button"
                 data-bs-toggle="collapse"
@@ -88,6 +88,15 @@
         </div>
       </div>
     </header>
+{% if messages %}
+<ul class="list-unstyled" style="list-style: none;">
+  {% for message in messages %}
+    <li {% if message.tags %}class="{{ message.tags }}"{% endif %}>
+      {{ message }}
+    </li>
+  {% endfor %}
+</ul>
+{% endif %}
 <article class="mb-4">
   <div class="container">
     <div class="row justify-content-center">
@@ -118,7 +127,7 @@
               </li>
             </ul>
             <div class="small text-center text-muted fst-italic">
-            Copyright &copy; Ken's Blog
+            Copyright &copy; {{ site_title }}
             </div>
           </div>
         </div>

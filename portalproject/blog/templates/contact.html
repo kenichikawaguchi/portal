@@ -2,7 +2,7 @@
 
 {% load static %}
 
-{% block title %}Ken's blog : contact{% endblock %}
+{% block title %}{{ site_title }} | contact{% endblock %}
 
 {% block header %}
   <h1>Contact Me</h1>
@@ -11,15 +11,6 @@
 
 {% block content %}
 <strong>Do you need contact us?</strong>
-{% if messages %}
-<ul class="list-unstyled" style="list-style: none;">
-  {% for message in messages %}
-    <li {% if message.tags %}class="{{ message.tags }}"{% endif %}>
-      {{ message }}
-    </li>
-  {% endfor %}
-</ul>
-{% endif %}
 <div class="my-5">
   <form method="POST">
     {% csrf_token %}
@@ -35,7 +26,7 @@
     {% endfor %}
     </br>
     <button type="submit"
-            class="button button-primary"
+            class="btn btn-primary"
             id="sendMessageButton">Send</button>
   </form>
   </hr>

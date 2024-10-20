@@ -32,6 +32,11 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
+if env.get_value('TITLE', default=None):
+    TITLE = env('TITLE')
+else:
+    TITLE = "My Blog"
+
 SECRET_KEY = env('SECRET_KEY')
 DB_NAME = env('DB_NAME')
 DB_USER = env('DB_USER')
@@ -96,6 +101,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
 
                 'django.template.context_processors.media',
+                'blog.my_context_processor.common',
             ],
         },
     },

@@ -16,15 +16,17 @@ Below is the instruction for installing and setting up your app.
 
   $ git clone https://github.com/kenichikawaguchi/portal.git
   $ cd portal
+  $ python -m venv venv
+  $ source venv/bin/activate
 
 .. ***
 
-2. Install PyPy packages
+2. Install pip packages
 
 .. code-block:: sh
 
-  $ pip install -r requirements.txt
-  $ cd portalproject
+  (venv) $ pip install -r requirements.txt
+  (venv) $ cd portalproject
 
 .. ***
 

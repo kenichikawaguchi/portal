@@ -75,9 +75,10 @@
   </div>
 {% endif %}
 
-  <hr>
-  <div class="row">
-  <ul>
+<hr>
+<div class="row">
+<h2>Comments</h2>
+<ul>
 {% for a in comment_list %}
   <li>{{ a.text|linebreaksbr }}<br> by {{ a.commenter }} at {{ a.created_at }}</li>
 {% endfor %}

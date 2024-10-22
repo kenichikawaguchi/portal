@@ -39,10 +39,15 @@
     </div>
     <hr>
   {% endif %}
+
 <hr>
   <div class="row">
     <div class="col-3">Posted by</div>
+  {% if request.user == object.user %}
+    <div class="col-9"><mark>{{ object.user }}</mark></div>
+  {% else %}
     <div class="col-9">{{ object.user }}</div>
+  {% endif %}
   </div>
   <div class="row mb-2">
     <div class="col-3">Posted at</div>
@@ -60,12 +65,36 @@
 <hr>
 
 {% if request.user == object.user %}
-<form method="POST">
+  <div class="row mb-2">
+    <div class="col d-flex justify-content-start">
+      <a href="{% url 'blog:update' object.pk %}"
+          class="btn btn-primary my-2 mx-2">Update</a>
+      <a href="{% url 'blog:delete' object.pk %}"
+          class="btn btn-danger my-2 mx-2">Delete</a>
+    </div>
+  </div>
+{% endif %}
+
+  <hr>
+  <div class="row">
+  <ul>
+{% for a in comment_list %}
+  <li>{{ a.text|linebreaksbr }}<br> by {{ a.commenter }} at {{ a.created_at }}</li>
+{% endfor %}
+  </ul>
+  </div>
+{% if user.is_authenticated %}
+<div class="row">
+<h2>Post Comment</h2>
+<form action="{% url 'blog:comment_create' object.pk %}" method="POST">
   {% csrf_token %}
-  <a href="{% url 'blog:update' object.pk %}"
-      class="btn btn-primary my-2">Update</a>
-  <a href="{% url 'blog:delete' object.pk %}"
-      class="btn btn-danger my-2">Delete</a>
+  {{ comment_form }}
+  <div class="row mb-2 mt-2">
+    <div class="col d-flex justify-content-start">
+      <button type="submit" class="btn btn-primary">Send</button>
+    </div>
+  </div>
 </form>
+</div>
 {% endif %}
 {% endblock %}

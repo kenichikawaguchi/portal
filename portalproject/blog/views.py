@@ -1,17 +1,19 @@
 from django.conf import settings
 from django.views.generic import ListView, DetailView, CreateView, TemplateView
-from .models import BlogPost
+from .models import BlogPost, Comment
 
 from django.views.generic import FormView, DeleteView, UpdateView
 from django.urls import reverse_lazy
 
-from .forms import ContactForm, BlogPostForm
+from .forms import ContactForm, BlogPostForm, CommentCreateForm
 from django.contrib import messages
 from django.core.mail import EmailMessage
 
 from django.utils.decorators import method_decorator
 
 from django.contrib.auth.decorators import login_required
+
+from django.shortcuts import redirect, get_object_or_404
 
 import os
 
@@ -23,9 +25,20 @@ class IndexView(ListView):
     # queryset = BlogPost.objects.prefetch_related("tags").order_by('-updated_at')
     paginate_by = 4
 
+
 class BlogDetail(DetailView):
     template_name = "detail.html"
     model = BlogPost
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        blogpost = self.object
+        context["comment_list"] = (
+            Comment.objects.select_related("comment_to").filter(comment_to=blogpost)
+        )
+        context["comment_form"] = CommentCreateForm
+
+        return context
 
 
 class ContactView(FormView):
@@ -96,4 +109,21 @@ class UpdateBlogPostView(UpdateView):
         postdata.save()
 
         return super().form_valid(form)
+
+
+@method_decorator(login_required,name='dispatch')
+class CommentCreate(CreateView):
+    model = Comment
+    form_class = CommentCreateForm
+
+    def form_valid(self, form):
+        post_pk = self.kwargs.get('pk')
+        post = get_object_or_404(BlogPost, pk=post_pk)
+
+        comment = form.save(commit=False)
+        comment.commenter = self.request.user
+        comment.comment_to = post
+        comment.save()
+
+        return redirect('blog:blog_detail', pk=post_pk)
 

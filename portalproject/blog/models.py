@@ -112,12 +112,14 @@ class Comment(models.Model):
     text = models.TextField(verbose_name="Comment", blank=False)
     commenter = models.ForeignKey(CustomUser, verbose_name="Commenter", on_delete=models.CASCADE)
     comment_to = models.ForeignKey(BlogPost, verbose_name="Blog Post", on_delete=models.CASCADE)
+    created_at = models.DateTimeField(verbose_name="Created at", auto_now_add=True)
+    updated_at = models.DateTimeField(verbose_name="Updated at", auto_now=True)
 
     class Meta:
         db_table = "comments"
 
     def __str__(self):
-        return f'{self.pk} {self.title}'
+        return f'{self.pk} {self.commenter} {self.comment_to}'
 
 
 class Tag(models.Model):

@@ -14,6 +14,8 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 
 from django.shortcuts import redirect, get_object_or_404
+from django.db.models import Q
+from django.http import HttpResponseRedirect
 
 import os
 
@@ -21,18 +23,47 @@ import os
 class IndexView(ListView):
     template_name = "index.html"
     context_object_name = 'orderby_records'
-    queryset = BlogPost.objects.order_by('-updated_at')
     # queryset = BlogPost.objects.prefetch_related("tags").order_by('-updated_at')
     paginate_by = 4
 
+    def get_queryset(self):
+        if self.request.user.id:
+            queryset = BlogPost.objects.filter(Q(is_public=True) | Q(user = self.request.user)).order_by('-updated_at')
+        else:
+            queryset = BlogPost.objects.filter(Q(is_public=True)).order_by('-updated_at')
+
+        return queryset
 
 class BlogDetail(DetailView):
     template_name = "detail.html"
     model = BlogPost
 
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        blogpost = self.object
+        if blogpost.is_public == False:
+            if self.request.user.id == None:
+                return HttpResponseRedirect(reverse_lazy('blog:index'))
+            else:
+                if self.request.user != blogpost.user:
+                    return HttpResponseRedirect(reverse_lazy('blog:index'))
+        return super().get(request, *args, **kwargs)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         blogpost = self.object
+        if blogpost.is_public == False:
+            context["private"] = True
+            if self.request.user.id == None:
+                context["your_content"] = False
+            else:
+                if self.request.user == blogpost.user:
+                    context["your_content"] = True
+                else:
+                    context["your_content"] = False
+        else:
+            context["private"] = False
+
         context["comment_list"] = (
             Comment.objects.select_related("comment_to").filter(comment_to=blogpost)
         )

@@ -2,19 +2,44 @@
 
 {% load static %}
 
-{% block title %}{{ site_title }}{% endblock %}
+{% block title %}
+  {% if private == True and your_content == False %}
+  private content
+  {% else %}
+  {{ site_title }}
+  {% endif %}
+{% endblock %}
 
 {% block header %}
+  {% if private == True and your_content == False %}
+  <span class="subheading">
+    <h1>(private content)</h1>
+  </span>
+  {% else %}
   <span class="subheading">
     <h1>{{ object.title }}</h1>
   </span>
+  {% endif %}
 {% endblock %}
 
 {% block content %}
+{% if private == True and your_content == False %}
+  <div class="row mb-2">
+    <p>private content</p>
+  </div>
+  <hr>
+  <div class="row mb-2">
+    <p><a href="{% url 'blog:index' %}">go back</a></p>
+  </div>
+{% else %}
   {% if user == object.user %}
-    <p>your content</p>
-  {% else %}
-    <p>not your content</p>
+  <div class="row mb-2">
+    {% if private == True %}
+      <p>your private content</p>
+    {% else %}
+      <p>your content</p>
+    {% endif %}
+  </div>
   {% endif %}
   <div class="row mb-2">
     {{ object.content|linebreaksbr }}
@@ -40,62 +65,63 @@
     <hr>
   {% endif %}
 
-<hr>
-  <div class="row">
-    <div class="col-3">Posted by</div>
+  <hr>
+    <div class="row">
+      <div class="col-3">Posted by</div>
+    {% if request.user == object.user %}
+      <div class="col-9"><mark>{{ object.user }}</mark></div>
+    {% else %}
+      <div class="col-9">{{ object.user }}</div>
+    {% endif %}
+    </div>
+    <div class="row mb-2">
+      <div class="col-3">Posted at</div>
+      <div class="col-9">{{ object.created_at }}</div>
+    </div>
+    <div class="row mb-2">
+      <div class="col-3">Updated at</div>
+      <div class="col-9">{{ object.updated_at }}</div>
+    </div>
+  <hr>
+    <span class="meta mb-2">
+      <a href={% url 'blog:index' %}>{{ site_title }}</a>
+    </span>
+
+  <hr>
+
   {% if request.user == object.user %}
-    <div class="col-9"><mark>{{ object.user }}</mark></div>
-  {% else %}
-    <div class="col-9">{{ object.user }}</div>
+    <div class="row mb-2">
+      <div class="col d-flex justify-content-start">
+        <a href="{% url 'blog:update' object.pk %}"
+            class="btn btn-primary my-2 mx-2">Update</a>
+        <a href="{% url 'blog:delete' object.pk %}"
+            class="btn btn-danger my-2 mx-2">Delete</a>
+      </div>
+    </div>
   {% endif %}
-  </div>
-  <div class="row mb-2">
-    <div class="col-3">Posted at</div>
-    <div class="col-9">{{ object.created_at }}</div>
-  </div>
-  <div class="row mb-2">
-    <div class="col-3">Updated at</div>
-    <div class="col-9">{{ object.updated_at }}</div>
-  </div>
-<hr>
-  <span class="meta mb-2">
-    <a href={% url 'blog:index' %}>{{ site_title }}</a>
-  </span>
 
-<hr>
-
-{% if request.user == object.user %}
-  <div class="row mb-2">
-    <div class="col d-flex justify-content-start">
-      <a href="{% url 'blog:update' object.pk %}"
-          class="btn btn-primary my-2 mx-2">Update</a>
-      <a href="{% url 'blog:delete' object.pk %}"
-          class="btn btn-danger my-2 mx-2">Delete</a>
+  <hr>
+  <div class="row">
+  <h2>Comments</h2>
+  <ul>
+  {% for a in comment_list %}
+    <li>{{ a.text|linebreaksbr }}<br> by {{ a.commenter }} at {{ a.created_at }}</li>
+  {% endfor %}
+    </ul>
     </div>
-  </div>
-{% endif %}
-
-<hr>
-<div class="row">
-<h2>Comments</h2>
-<ul>
-{% for a in comment_list %}
-  <li>{{ a.text|linebreaksbr }}<br> by {{ a.commenter }} at {{ a.created_at }}</li>
-{% endfor %}
-  </ul>
-  </div>
-{% if user.is_authenticated %}
-<div class="row">
-<h2>Post Comment</h2>
-<form action="{% url 'blog:comment_create' object.pk %}" method="POST">
-  {% csrf_token %}
-  {{ comment_form }}
-  <div class="row mb-2 mt-2">
-    <div class="col d-flex justify-content-start">
-      <button type="submit" class="btn btn-primary">Send</button>
+  {% if user.is_authenticated %}
+  <div class="row">
+  <h2>Post Comment</h2>
+  <form action="{% url 'blog:comment_create' object.pk %}" method="POST">
+    {% csrf_token %}
+    {{ comment_form }}
+    <div class="row mb-2 mt-2">
+      <div class="col d-flex justify-content-start">
+        <button type="submit" class="btn btn-primary">Send</button>
+      </div>
     </div>
+  </form>
   </div>
-</form>
-</div>
+  {% endif %}
 {% endif %}
 {% endblock %}

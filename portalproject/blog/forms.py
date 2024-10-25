@@ -30,12 +30,16 @@ class ContactForm(forms.Form):
 class BlogPostForm(forms.ModelForm):
     class Meta:
         model = BlogPost
-        fields = ["title", "content", "photo", "photo2", "photo3"]
+        fields = ["title", "content", "is_public", "photo", "photo2", "photo3"]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        for field in self.fields.values():
-            field.widget.attrs['class'] = 'form-control'
+        self.fields['title'].widget.attrs['class'] = 'form-control'
+        self.fields['content'].widget.attrs['class'] = 'form-control'
+        self.fields['is_public'].widget.attrs['class'] = 'form-check-input'
+        self.fields['photo'].widget.attrs['class'] = 'form-control'
+        self.fields['photo2'].widget.attrs['class'] = 'form-control'
+        self.fields['photo3'].widget.attrs['class'] = 'form-control'
 
 class CommentCreateForm(forms.ModelForm):
     class Meta:

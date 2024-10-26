@@ -3,43 +3,28 @@
 {% load static %}
 
 {% block title %}
-  {% if private == True and your_content == False %}
-  private content
-  {% else %}
   {{ site_title }}
-  {% endif %}
 {% endblock %}
 
 {% block header %}
-  {% if private == True and your_content == False %}
-  <span class="subheading">
-    <h1>(private content)</h1>
-  </span>
-  {% else %}
   <span class="subheading">
     <h1>{{ object.title }}</h1>
   </span>
-  {% endif %}
 {% endblock %}
 
 {% block content %}
-{% if private == True and your_content == False %}
-  <div class="row mb-2">
-    <p>private content</p>
-  </div>
-  <hr>
-  <div class="row mb-2">
-    <p><a href="{% url 'blog:index' %}">go back</a></p>
-  </div>
-{% else %}
   {% if user == object.user %}
-  <div class="row mb-2">
-    {% if private == True %}
-      <p>your private content</p>
-    {% else %}
-      <p>your content</p>
-    {% endif %}
-  </div>
+    <div class="row">
+      <ul class="messages" style="list-style: none;">
+        <li class="alert alert-info">
+          {% if private == True %}
+            your private content
+          {% else %}
+            your content
+          {% endif %}
+        </li>
+      </ul>
+    </div>
   {% endif %}
   <div class="row mb-2">
     {{ object.content|linebreaksbr }}
@@ -123,5 +108,4 @@
   </form>
   </div>
   {% endif %}
-{% endif %}
 {% endblock %}

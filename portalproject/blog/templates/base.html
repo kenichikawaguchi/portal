@@ -89,13 +89,15 @@
       </div>
     </header>
 {% if messages %}
-<ul class="list-unstyled" style="list-style: none;">
+<div class="container">
+<ul class="messages" style="list-style: none;">
   {% for message in messages %}
     <li {% if message.tags %}class="{{ message.tags }}"{% endif %}>
       {{ message }}
     </li>
   {% endfor %}
 </ul>
+</div>
 {% endif %}
 <article class="mb-4">
   <div class="container">

@@ -15,7 +15,7 @@ import os
 
 from pathlib import Path
 
-from django.contrib.messages import constants
+from django.contrib.messages import constants as messages
 
 
 env = environ.Env(
@@ -218,9 +218,6 @@ LOGGING = {
     }
 }
 
-MESSAGE_TAGS = {
-    constants.SUCCESS: 'alert alert-success',
-}
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 EMAIL_BACKEND = env('EMAIL_BACKEND')
@@ -255,3 +252,9 @@ if env.get_value('FAVICON', default=None):
 else:
     FAVICON = "assets/favicon.ico"
 
+MESSAGE_TAGS = {
+    messages.ERROR: 'alert alert-danger',
+    messages.WARNING: 'alert alert-warning',
+    messages.SUCCESS: 'alert alert-success',
+    messages.INFO: 'alert alert-info',
+}

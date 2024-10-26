@@ -3,7 +3,7 @@ from django.views.generic import ListView, DetailView, CreateView, TemplateView
 from .models import BlogPost, Comment
 
 from django.views.generic import FormView, DeleteView, UpdateView
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 
 from .forms import ContactForm, BlogPostForm, CommentCreateForm
 from django.contrib import messages
@@ -15,7 +15,7 @@ from django.contrib.auth.decorators import login_required
 
 from django.shortcuts import redirect, get_object_or_404
 from django.db.models import Q
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, Http404
 
 import os
 
@@ -39,28 +39,32 @@ class BlogDetail(DetailView):
     model = BlogPost
 
     def get(self, request, *args, **kwargs):
-        self.object = self.get_object()
+        try:
+            result = super().get(request, *args, **kwargs)
+            blogpost = self.object
+        except Exception as e:
+            msg = str(e) + ": {}".format(request.path)
+            messages.warning(request, msg)
+            return HttpResponseRedirect(reverse_lazy('blog:index'))
         blogpost = self.object
+
         if blogpost.is_public == False:
-            if self.request.user.id == None:
+            if request.user.id == None:
+                msg = "Sorry, you have no right to see: " + ": {}".format(request.path)
+                messages.warning(request, msg)
                 return HttpResponseRedirect(reverse_lazy('blog:index'))
             else:
-                if self.request.user != blogpost.user:
+                if request.user != blogpost.user:
+                    msg = "Sorry, you have no right to see: " + ": {}".format(request.path)
+                    messages.warning(request, msg)
                     return HttpResponseRedirect(reverse_lazy('blog:index'))
-        return super().get(request, *args, **kwargs)
+        return result
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         blogpost = self.object
         if blogpost.is_public == False:
             context["private"] = True
-            if self.request.user.id == None:
-                context["your_content"] = False
-            else:
-                if self.request.user == blogpost.user:
-                    context["your_content"] = True
-                else:
-                    context["your_content"] = False
         else:
             context["private"] = False
 

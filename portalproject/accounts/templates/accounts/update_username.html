@@ -5,11 +5,18 @@
 {% block title %}{{ site_title }} | Update Username{% endblock %}
 
 {% block header %}
-  <h1>Update Post</h1>
+  <h1>Update Username</h1>
   <span class="subheading">Update Username.</span>
 {% endblock %}
 
 {% block content %}
+{% for key, errors in form.errors.items %}
+<ul class="alert alert-danger list-unstyled">{% for error in errors %}
+    <li>{{ error }}</li>
+{% endfor %}
+</ul>
+{% endfor %}
+
   <form class="formUpdate" method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     <table class="table">

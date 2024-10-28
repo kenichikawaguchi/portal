@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}{{ site_title }} | Update Username{% endblock %}
+
+{% block header %}
+  <h1>Update Post</h1>
+  <span class="subheading">Update Username.</span>
+{% endblock %}
+
+{% block content %}
+  <form class="formUpdate" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <table class="table">
+      <tbody>
+        <tr>
+          <th>{{ form.username.label }}</th>
+          <td>{{ form.username }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="form-group text-right" style="padding:20px 0">
+      <input type="submit" value="Submit" class="btn btn-primary" />
+    </div>
+  </form>
+
+  <hr>
+
+{% endblock %}

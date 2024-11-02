@@ -49,7 +49,7 @@ class CustomUser(AbstractUser):
     dt_now = datetime.datetime.now()
     dt_str = dt_now.strftime('%Y-%m-%d-%H-%M-%S')
     icon = models.ImageField(verbose_name="Icon", upload_to=rename_image, blank=True, null=True)
-    icon_small = ImageSpecField(source="icon", processors=[processors.Transpose(), ResizeToFill(50, 50)], format='JPEG')
+    icon_small = ImageSpecField(source="icon", processors=[processors.Transpose(), ResizeToFill(200, 200)], format='JPEG')
 
     class Meta:
         verbose_name_plural = 'CustomUser'

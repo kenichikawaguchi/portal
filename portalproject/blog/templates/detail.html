@@ -56,7 +56,7 @@
       <div class="col-3">Posted by</div>
       <div class="col-9">
         {% if object.user.icon_small %}
-          <img src="{{ object.user.icon_small.url }}" class="rounded-circle">
+          <img src="{{ object.user.icon_small.url }}" class="rounded-circle" width="50">
         {% endif %}
         {% if request.user == object.user %}
           <mark>{{ object.user }}</mark>
@@ -98,7 +98,7 @@
   {% for a in comment_list %}
     <li>{{ a.text|linebreaksbr }}<br> by
     {% if a.commenter.icon_small %}
-      <img src="{{ a.commenter.icon_small.url }}" class="rounded-circle">
+      <img src="{{ a.commenter.icon_small.url }}" class="rounded-circle" width="50">
     {% endif %}
     {{ a.commenter }} at {{ a.created_at|date:"Y-m-d H:i:s T" }}{% tz_detect %}</li>
   {% endfor %}

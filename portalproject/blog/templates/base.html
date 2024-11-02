@@ -71,7 +71,7 @@
               {% if user.icon %}
               <li class="nav-item">
                 <a href="{% url 'accounts:profile' %}" onClick="hogeFunction();return false;"
-                  class="nav-link px-lg-3 py-3 py-lg-4"><img src="{{ user.icon_small.url }}">
+                  class="nav-link px-lg-3 py-3 py-lg-4"><img src="{{ user.icon_small.url }}" class="rounded-circle">
                 </a>
               </li>
               {% else %}

@@ -58,7 +58,7 @@
             <p class="post-meta mt-2">
               Posted by
               {% if record.user.icon_small %}
-                <img src="{{ record.user.icon_small.url }}">
+                <img src="{{ record.user.icon_small.url }}" class="rounded-circle">
               {% endif %}
                {{ record.user }}
               </br>Posted at {{ record.created_at|date:"Y-m-d H:i:s T" }}{% tz_detect %}

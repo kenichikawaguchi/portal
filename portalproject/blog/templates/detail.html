@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% load static %}
+{% load tz_detect %}
 
 {% block title %}
   {{ site_title }}
@@ -33,17 +34,17 @@
     <div class="row">
     {% if object.photo %}
       <div class="col-md">
-        <img class="img-fluid" src="{{ MEDIA_URL }}{{ object.photo }}">
+        <img class="img-fluid" src="{{ object.photo.url }}">
       </div>
     {% endif %}
     {% if object.photo2 %}
       <div class="col-md">
-        <img class="img-fluid" src="{{ MEDIA_URL }}{{ object.photo2 }}">
+        <img class="img-fluid" src="{{ object.photo2.url }}">
       </div>
     {% endif %}
     {% if object.photo3 %}
       <div class="col-md">
-        <img class="img-fluid" src="{{ MEDIA_URL }}{{ object.photo3 }}">
+        <img class="img-fluid" src="{{ object.photo3.url }}">
       </div>
     {% endif %}
     </div>
@@ -53,19 +54,24 @@
   <hr>
     <div class="row">
       <div class="col-3">Posted by</div>
-    {% if request.user == object.user %}
-      <div class="col-9"><mark>{{ object.user }}</mark></div>
-    {% else %}
-      <div class="col-9">{{ object.user }}</div>
-    {% endif %}
+      <div class="col-9">
+        {% if object.user.icon_small %}
+          <img src="{{ object.user.icon_small.url }}">
+        {% endif %}
+        {% if request.user == object.user %}
+          <mark>{{ object.user }}</mark>
+        {% else %}
+          {{ object.user }}
+        {% endif %}
+      </div>
     </div>
     <div class="row mb-2">
       <div class="col-3">Posted at</div>
-      <div class="col-9">{{ object.created_at }}</div>
+      <div class="col-9">{{ object.created_at|date:"Y-m-d H:i:s T" }}{% tz_detect %}</div>
     </div>
     <div class="row mb-2">
       <div class="col-3">Updated at</div>
-      <div class="col-9">{{ object.updated_at }}</div>
+      <div class="col-9">{{ object.updated_at|date:"Y-m-d H:i:s T" }}{% tz_detect %}</div>
     </div>
   <hr>
     <span class="meta mb-2">
@@ -90,7 +96,11 @@
   <h2>Comments</h2>
   <ul>
   {% for a in comment_list %}
-    <li>{{ a.text|linebreaksbr }}<br> by {{ a.commenter }} at {{ a.created_at }}</li>
+    <li>{{ a.text|linebreaksbr }}<br> by
+    {% if a.commenter.icon_small %}
+      <img src="{{ a.commenter.icon_small.url }}">
+    {% endif %}
+    {{ a.commenter }} at {{ a.created_at|date:"Y-m-d H:i:s T" }}{% tz_detect %}</li>
   {% endfor %}
     </ul>
     </div>

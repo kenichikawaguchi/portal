@@ -189,6 +189,7 @@ INSTALLED_APPS = [
     # 'allauth.socialaccount.providers.feishu',
     # "allauth.socialaccount.providers.atlassian",
 
+    'tz_detect',
 ]
 
 MIDDLEWARE = [
@@ -201,6 +202,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
     'allauth.account.middleware.AccountMiddleware',
+    'tz_detect.middleware.TimezoneMiddleware',
 ]
 
 ROOT_URLCONF = 'portalproject.urls'

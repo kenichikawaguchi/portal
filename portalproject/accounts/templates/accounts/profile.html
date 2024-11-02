@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}{{ site_title }} | User's Profile{% endblock %}
+
+{% block header %}
+  <h1>User's Profile</h1>
+  <span class="subheading">You can update your profile.</span>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+  <table class="table">
+    <tbody>
+      <tr>
+        <th>Username</th>
+        <td>{{ user.username }}</td>
+        <td>
+          <div class="row mb-2">
+            <div class="col d-flex justify-content-start">
+              <a href="{% url 'accounts:update_username' %}"
+                  class="btn btn-primary my-2 mx-2">Update</a>
+            </div>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <th>Email</th>
+        <td>{{ user.email }}</td>
+        <td>
+          <div class="row mb-2">
+            <div class="col d-flex justify-content-start">
+              <a href="{% url 'account_email' %}"
+                  class="btn btn-primary my-2 mx-2">Update</a>
+            </div>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <th>Icon</th>
+      {% if user.icon %}
+        <td><img src="{{ user.icon.url }}" width="200"></td>
+        <td>
+          <div class="row mb-2">
+            <div class="col d-flex justify-content-start">
+              <a href="{% url 'accounts:update_icon' %}"
+                  class="btn btn-primary my-2 mx-2">Update</a>
+            </div>
+          </div>
+        </td>
+      {% else %}
+        <td>(No Icon Data)</td>
+        <td>
+          <div class="row mb-2">
+            <div class="col d-flex justify-content-start">
+              <a href="{% url 'accounts:update_icon' %}"
+                  class="btn btn-primary my-2 mx-2">Upload</a>
+            </div>
+          </div>
+        </td>
+      {% endif %}
+      </tr>
+    </tbody>
+  </table>
+</div>
+{% endblock %}

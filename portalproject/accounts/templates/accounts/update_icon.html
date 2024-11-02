@@ -2,11 +2,11 @@
 
 {% load static %}
 
-{% block title %}{{ site_title }} | Update Username{% endblock %}
+{% block title %}{{ site_title }} | Update Icon{% endblock %}
 
 {% block header %}
-  <h1>Update Username</h1>
-  <span class="subheading">Update Username.</span>
+  <h1>Update Icon</h1>
+  <span class="subheading">Update Icon.</span>
 {% endblock %}
 
 {% block content %}
@@ -18,17 +18,27 @@
 {% endfor %}
 
 <div class="row">
+  <table class="table">
+    <tbody>
+      <tr>
+        <th>Current Icon</th>
+        {% if current_icon %}
+        <td><img src="{{ current_icon.url }}"></td>
+        {% else %}
+        <td>(No Icon Data)</td>
+        {% endif %}
+      </tr>
+    </tbody>
+  </table>
+</div>
+<div class="row">
   <form class="formUpdate" method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     <table class="table">
       <tbody>
         <tr>
-          <th>Current Username</th>
-          <td>{{ current_username }}</td>
-        </tr>
-        <tr>
-          <th>New {{ form.username.label }}</th>
-          <td>{{ form.username }}</td>
+          <th>{{ form.icon.label }}</th>
+          <td>{{ form.icon }}</td>
         </tr>
       </tbody>
     </table>

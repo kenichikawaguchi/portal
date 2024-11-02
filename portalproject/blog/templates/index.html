@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 
+{% load tz_detect %}
+
 {% load static %}
 
 {% block title %}{{ site_title }}{% endblock %}
@@ -53,11 +55,15 @@
                   </p>
                 {% endif %}
             </a>
-            <p class="post-meta">
-              Posted by {{ record.user }}
-              </br>Posted at {{ record.created_at }}
+            <p class="post-meta mt-2">
+              Posted by
+              {% if record.user.icon_small %}
+                <img src="{{ record.user.icon_small.url }}">
+              {% endif %}
+               {{ record.user }}
+              </br>Posted at {{ record.created_at|date:"Y-m-d H:i:s T" }}{% tz_detect %}
               {% if record.is_updated %}
-                </br>Updated at {{ record.updated_at }}
+                </br>Updated at {{ record.updated_at|date:"Y-m-d H:i:s T" }}{% tz_detect %}
               {% endif %}
             </p>
           </div>

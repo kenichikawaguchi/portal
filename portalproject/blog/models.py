@@ -12,6 +12,8 @@ from django.db.models.signals import post_delete
 from django.dispatch import receiver
 
 from markdownx.models import MarkdownxField
+from django.utils.safestring import mark_safe
+from markdownx.utils import markdownify
 
 
 def delete_previous_file(function):
@@ -91,6 +93,9 @@ class BlogPost(models.Model):
     photo_small = ImageSpecField(source="photo", processors=[processors.Transpose(), ResizeToFill(200, 200)], format="JPEG")
     photo2_small = ImageSpecField(source="photo2", processors=[processors.Transpose(), ResizeToFill(200, 200)], format="JPEG")
     photo3_small = ImageSpecField(source="photo3", processors=[processors.Transpose(), ResizeToFill(200, 200)], format="JPEG")
+
+    def get_text_markdownx(self):
+        return mark_safe(markdownify(self.content))
 
     class Meta:
         db_table = "blogposts"

@@ -29,7 +29,7 @@
   {% endif %}
   <div class="row mb-2">
     <div class="markdownx">
-    {{ object.content|safe }}
+    {{ object.get_text_markdownx|safe }}
     </div>
   </div>
   {% if object.photo or object.photo2 or object.photo3 %}

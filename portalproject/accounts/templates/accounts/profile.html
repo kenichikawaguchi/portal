@@ -41,6 +41,9 @@
         <th>Icon</th>
       {% if user.icon %}
         <td><img src="{{ user.icon.url }}" width="200"></td>
+      {% else %}
+        <td>(No Icon Data)</td>
+      {% endif %}
         <td>
           <div class="row mb-2">
             <div class="col d-flex justify-content-start">
@@ -49,17 +52,6 @@
             </div>
           </div>
         </td>
-      {% else %}
-        <td>(No Icon Data)</td>
-        <td>
-          <div class="row mb-2">
-            <div class="col d-flex justify-content-start">
-              <a href="{% url 'accounts:update_icon' %}"
-                  class="btn btn-primary my-2 mx-2">Upload</a>
-            </div>
-          </div>
-        </td>
-      {% endif %}
       </tr>
     </tbody>
   </table>

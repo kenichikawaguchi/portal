@@ -11,6 +11,8 @@ from imagekit import processors
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
 
+from markdownx.models import MarkdownxField
+
 
 def delete_previous_file(function):
     def wrapper(*args, **kwargs):
@@ -77,7 +79,8 @@ def rename_image(instance, filename):
 class BlogPost(models.Model):
     user = models.ForeignKey(CustomUser, verbose_name="Author", on_delete=models.PROTECT)
     title = models.CharField(verbose_name="Title", max_length=200)
-    content = models.TextField(verbose_name="Content")
+    # content = models.TextField(verbose_name="Content")
+    content = MarkdownxField(verbose_name="Content")
     is_public = models.BooleanField('public content?', default=True)
     photo = models.ImageField(verbose_name="Photo", upload_to=rename_image, blank=True, null=True)
     photo2 = models.ImageField(verbose_name="Photo2", upload_to=rename_image, blank=True, null=True)

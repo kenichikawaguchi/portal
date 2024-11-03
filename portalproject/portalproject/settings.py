@@ -190,6 +190,8 @@ INSTALLED_APPS = [
     # "allauth.socialaccount.providers.atlassian",
 
     'tz_detect',
+
+    'markdownx',
 ]
 
 MIDDLEWARE = [

@@ -9,4 +9,5 @@ urlpatterns = [
     path('accounts/profile/', include('accounts.urls')),
     path('accounts/', include('allauth.urls')),
     path('tz_detect/', include('tz_detect.urls')),
+    path('markdownx/', include('markdownx.urls')),
 ]  +  static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

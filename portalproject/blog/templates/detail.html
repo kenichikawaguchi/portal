@@ -28,7 +28,9 @@
     </div>
   {% endif %}
   <div class="row mb-2">
-    {{ object.content|linebreaksbr }}
+    <div class="markdownx">
+    {{ object.content|safe }}
+    </div>
   </div>
   {% if object.photo or object.photo2 or object.photo3 %}
     <div class="row">

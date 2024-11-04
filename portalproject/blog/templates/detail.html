@@ -98,7 +98,7 @@
   <h2>Comments</h2>
   <ul>
   {% for a in comment_list %}
-    <li>{{ a.text|linebreaksbr }}<br> by
+    <li><div class="markdownx">{{ a.get_text_markdownx|safe }}</div> by
     {% if a.commenter.icon_small %}
       <img src="{{ a.commenter.icon_small.url }}" class="rounded-circle" width="50">
     {% endif %}
@@ -107,11 +107,12 @@
     </ul>
     </div>
   {% if user.is_authenticated %}
+  <hr>
   <div class="row">
   <h2>Post Comment</h2>
-  <form action="{% url 'blog:comment_create' object.pk %}" method="POST">
+  <form action="{% url 'blog:comment_create' object.pk %}" method="POST" enctype="multipart/form-data">
     {% csrf_token %}
-    {{ comment_form }}
+    <div>{{ form.text }}</div>
     <div class="row mb-2 mt-2">
       <div class="col d-flex justify-content-start">
         <button type="submit" class="btn btn-primary">Send</button>

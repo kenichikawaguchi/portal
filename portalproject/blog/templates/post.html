@@ -42,6 +42,10 @@
     <button type="submit" class="btn btn-primary">Post</button>
     <a href="{% url 'blog:index' %}" class="btn btn-danger">cancel</a>
   </form>
+  <hr>
+  <div class="row">
+  {{ form.media }}
+  </div>
 
   <hr>
 

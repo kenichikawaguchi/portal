@@ -73,7 +73,7 @@ class BlogDetail(DetailView):
         context["comment_list"] = (
             Comment.objects.select_related("comment_to").filter(comment_to=blogpost)
         )
-        context["comment_form"] = CommentCreateForm
+        context["form"] = CommentCreateForm
 
         return context
 

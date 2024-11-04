@@ -25,8 +25,7 @@
               <a href="{% url 'blog:blog_detail' record.pk %}">{{ record.title }}</a></h2>
               <h3 class="post-subtitle">
                 <span style="font-size : 14pt">
-                  <div class="markdownx">
-                  {{ record.get_text_markdownx|safe }}
+                  {{ record.get_text_markdownx|truncatechars:20 }}
                 </span>
               </h3>
               {% if record.photo or record.photo2 or record.photo3 %}

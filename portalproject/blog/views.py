@@ -26,7 +26,7 @@ class IndexView(ListView):
     template_name = "index.html"
     context_object_name = 'orderby_records'
     # queryset = BlogPost.objects.prefetch_related("tags").order_by('-updated_at')
-    paginate_by = 4
+    paginate_by = settings.PAGINATE_BY
 
     def get_queryset(self):
         if self.request.user.id:

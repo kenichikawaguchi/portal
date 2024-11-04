@@ -382,3 +382,9 @@ MESSAGE_TAGS = {
     messages.SUCCESS: 'alert alert-success',
     messages.INFO: 'alert alert-info',
 }
+
+if env.get_value('PAGINATE_BY', default=None):
+    PAGINATE_BY = env('PAGINATE_BY')
+else:
+    PAGINATE_BY = 10
+

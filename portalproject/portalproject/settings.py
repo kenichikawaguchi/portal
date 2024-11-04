@@ -37,6 +37,11 @@ if env.get_value('TITLE', default=None):
 else:
     TITLE = "My Blog"
 
+if env.get_value('SUBTITLE', default=None):
+    SUBTITLE = env('SUBTITLE')
+else:
+    SUBTITLE = "Enjoy the Blog!"
+
 SECRET_KEY = env('SECRET_KEY')
 DB_NAME = env('DB_NAME')
 DB_USER = env('DB_USER')

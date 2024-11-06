@@ -71,12 +71,12 @@ class BlogDetail(DetailView):
             context["private"] = False
 
         context["comment_list"] = (
-            Comment.objects.select_related("comment_to").filter(comment_to=blogpost)
+            Comment.objects.select_related("comment_to").filter(comment_to=blogpost).order_by('-created_at')
         )
         context["form"] = CommentCreateForm
 
         context["good_list"] = (
-            Good.objects.select_related("good_to").filter(good_to=blogpost)
+            Good.objects.select_related("good_to").filter(good_to=blogpost).order_by('-created_at')
         )
 
         return context

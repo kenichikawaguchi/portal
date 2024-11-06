@@ -120,7 +120,7 @@ class BlogPost(models.Model):
 class Comment(models.Model):
     text = MarkdownxField(verbose_name="Comment", blank=False)
     commenter = models.ForeignKey(CustomUser, verbose_name="Commenter", on_delete=models.CASCADE)
-    comment_to = models.ForeignKey(BlogPost, verbose_name="Blog Post", on_delete=models.CASCADE)
+    comment_to = models.ForeignKey(BlogPost, verbose_name="Blog Post", related_name="comments", on_delete=models.CASCADE)
     created_at = models.DateTimeField(verbose_name="Created at", auto_now_add=True)
     updated_at = models.DateTimeField(verbose_name="Updated at", auto_now=True)
 
@@ -132,6 +132,25 @@ class Comment(models.Model):
 
     def __str__(self):
         return f'{self.pk} {self.text[:15] } *BY* {self.commenter} *TO* {self.comment_to}'
+
+
+class Good(models.Model):
+    gooder = models.ForeignKey(CustomUser, verbose_name="Gooder", on_delete=models.CASCADE)
+    good_to = models.ForeignKey(BlogPost, verbose_name="Blog Post", related_name="goods", on_delete=models.CASCADE)
+    created_at = models.DateTimeField(verbose_name="Created at", auto_now_add=True)
+    updated_at = models.DateTimeField(verbose_name="Updated at", auto_now=True)
+
+    class Meta:
+        db_table = "goods"
+        constraints = [
+            models.UniqueConstraint(
+                fields=['good_to_id', 'gooder_id'],
+                name='good_to_gooder_unique'
+            )
+        ]
+
+    def __str__(self):
+        return f'{self.pk} {self.gooder} {self.good_to}'
 
 
 class Tag(models.Model):

@@ -66,6 +66,9 @@
                 </br>Updated at {{ record.updated_at|date:"Y-m-d H:i:s T" }}{% tz_detect %}
               {% endif %}
             </p>
+            <p class="post-meta mt-2">
+              <i class="fa-regular fa-comment"></i>{{ record.comments.count }}
+            </p>
           </div>
           <hr>
         {% endfor %}

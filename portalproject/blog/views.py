@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.views.generic import ListView, DetailView, CreateView, TemplateView
-from .models import BlogPost, Comment
+from .models import BlogPost, Comment, Good
 
 from django.views.generic import FormView, DeleteView, UpdateView
 from django.urls import reverse_lazy, reverse
@@ -30,9 +30,9 @@ class IndexView(ListView):
 
     def get_queryset(self):
         if self.request.user.id:
-            queryset = BlogPost.objects.filter(Q(is_public=True) | Q(user = self.request.user)).order_by('-updated_at')
+            queryset = BlogPost.objects.prefetch_related('comments').filter(Q(is_public=True) | Q(user = self.request.user)).order_by('-updated_at')
         else:
-            queryset = BlogPost.objects.filter(Q(is_public=True)).order_by('-updated_at')
+            queryset = BlogPost.objects.prefetch_related('comments').filter(Q(is_public=True)).order_by('-updated_at')
 
         return queryset
 
@@ -74,6 +74,10 @@ class BlogDetail(DetailView):
             Comment.objects.select_related("comment_to").filter(comment_to=blogpost)
         )
         context["form"] = CommentCreateForm
+
+        context["good_list"] = (
+            Good.objects.select_related("good_to").filter(good_to=blogpost)
+        )
 
         return context
 

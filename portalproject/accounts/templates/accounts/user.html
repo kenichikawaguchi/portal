@@ -28,7 +28,7 @@
       </tr>
       <tr>
         <th>Introduction</th>
-        <td>{{ target_user.introduction }}</td>
+        <td class="markdownx">{{ target_user.get_text_markdownx|safe }}</td>
       </tr>
     </tbody>
   </table>

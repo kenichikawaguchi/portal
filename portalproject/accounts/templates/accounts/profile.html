@@ -55,10 +55,10 @@
       </tr>
       <tr>
         <th>Introduction</th>
-        <td>{{ user.introduction }}</td>
+        <td>{{ user.get_text_markdownx| safe }}</td>
         <td>
           <div class="row mb-2">
-            <div class="col d-flex justify-content-start">
+            <div class="col d-flex justify-content-start markdownx">
               <a href="{% url 'accounts:update_introduction' %}"
                   class="btn btn-primary my-2 mx-2">Update</a>
             </div>

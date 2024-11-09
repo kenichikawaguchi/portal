@@ -5,12 +5,13 @@ from django.utils.translation import gettext as _
 from django.contrib.auth import get_user_model
 from .models import CustomUser
 
+
 class CustomUserAdmin(UserAdmin):
-    list_display = ('id', 'username', 'email', 'is_staff', 'is_superuser', 'icon')
-    list_display_links = ('id', 'username', 'email', 'is_staff', 'is_superuser', 'icon')
+    list_display = ('id', 'username', 'email', 'is_staff', 'is_superuser', 'icon', 'introduction')
+    list_display_links = ('id', 'username', 'email', 'is_staff', 'is_superuser', 'icon', 'introduction')
     fieldsets = (
         (None, {"fields": ("username", "password")}),
-        (_("Personal Info"), {"fields": ("first_name", "last_name", "email", "icon")}),
+        (_("Personal Info"), {"fields": ("first_name", "last_name", "email", "icon", "introduction")}),
         (
             _("Permissions"),
             {

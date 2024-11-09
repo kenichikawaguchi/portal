@@ -77,7 +77,7 @@ class IntroductionChangeView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         context = {}
         context["current_introduction"] = request.user.introduction
-        form = IntroductionChangeForm()
+        form = IntroductionChangeForm({"introduction": request.user.introduction})
         context["form"] = form
         return render(request, 'accounts/update_introduction.html', context)
 
@@ -93,7 +93,7 @@ class IntroductionChangeView(LoginRequiredMixin, View):
             user_obj.save()
             messages.info(request,"Introduction has changed for {}".format(user_obj.username))
 
-            return redirect('blog:index')
+            return redirect('accounts:profile')
         else:
             context["form"] = form
 

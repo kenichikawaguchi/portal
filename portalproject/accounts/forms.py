@@ -1,6 +1,8 @@
 from django import forms
 from .models import CustomUser
 
+from markdownx.widgets import MarkdownxWidget
+
 
 class UsernameChangeForm(forms.ModelForm):
 
@@ -44,12 +46,9 @@ class IntroductionChangeForm(forms.ModelForm):
     class Meta:
         model  = CustomUser
         fields = ("introduction", )
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        for field in self.fields.values():
-            field.widget.attrs['class'] = "form-control"
-            field.widget.attrs['placeholder'] = ""
+        widgets = {
+            "introduction": MarkdownxWidget(),
+        }
 
     def clean_icon(self):
         introduction = self.cleaned_data.get('introduction')

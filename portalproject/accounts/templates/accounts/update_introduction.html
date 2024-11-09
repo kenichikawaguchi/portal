@@ -18,7 +18,7 @@
 {% endfor %}
 
 <div class="row">
-  <form class="formUpdate" method="POST" enctype="multipart/form-data">
+  <form class="formUpdate" action="{% url 'accounts:update_introduction' %}" method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     <table class="table">
       <tbody>
@@ -36,6 +36,7 @@
       <input type="submit" value="Submit" class="btn btn-primary" />
     </div>
   </form>
+  {{ form.media }}
 </div>
 
   <hr>

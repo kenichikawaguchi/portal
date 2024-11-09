@@ -3,7 +3,7 @@ from django.views.generic import View, DetailView
 from .models import CustomUser
 from django.contrib import messages
 
-from .forms import UsernameChangeForm, IconChangeForm
+from .forms import UsernameChangeForm, IconChangeForm, IntroductionChangeForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 
@@ -71,3 +71,53 @@ class CustomUserView(LoginRequiredMixin, View):
         context = {}
         context["user"] = request.user
         return render(request, 'accounts/profile.html', context)
+
+
+class IntroductionChangeView(LoginRequiredMixin, View):
+    def get(self, request, *args, **kwargs):
+        context = {}
+        context["current_introduction"] = request.user.introduction
+        form = IntroductionChangeForm()
+        context["form"] = form
+        return render(request, 'accounts/update_introduction.html', context)
+
+
+    def post(self, request, *args, **kwargs):
+        context = {}
+        form = IntroductionChangeForm(request.POST)
+
+        if form.is_valid():
+            introduction = form.cleaned_data["introduction"]
+            user_obj = CustomUser.objects.get(username=request.user.username)
+            user_obj.introduction = introduction
+            user_obj.save()
+            messages.info(request,"Introduction has changed for {}".format(user_obj.username))
+
+            return redirect('blog:index')
+        else:
+            context["form"] = form
+
+            return render(request, 'accounts/update_introduction.html', context)
+
+
+class TargetUserView(View):
+    template_name = "user.html"
+    model = CustomUser
+
+    def get(self, request, *args, **kwargs):
+        context = {}
+        context["user"] = request.user
+        target_username = request.user
+        user_obj = CustomUser.objects.get(username=target_username)
+        context["target_user"] = user_obj
+        return render(request, 'accounts/user.html', context)
+
+    def post(self, request, *args, **kwargs):
+        context = {}
+        context["user"] = request.user
+        target_username = request.POST['target_user']
+        user_obj = CustomUser.objects.get(username=target_username)
+        context["target_user"] = user_obj
+        context["return_url"] = request.POST['return_url']
+        return render(request, 'accounts/user.html', context)
+

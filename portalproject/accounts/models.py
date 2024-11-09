@@ -7,6 +7,10 @@ from imagekit.processors import ResizeToFill
 from imagekit import processors
 import os
 
+from markdownx.models import MarkdownxField
+from django.utils.safestring import mark_safe
+from markdownx.utils import markdownify
+
 
 def delete_previous_file(function):
     def wrapper(*args, **kwargs):
@@ -46,13 +50,15 @@ def rename_image(instance, filename):
 
 class CustomUser(AbstractUser):
     ''' Extended Uer Model '''
-    dt_now = datetime.datetime.now()
-    dt_str = dt_now.strftime('%Y-%m-%d-%H-%M-%S')
+    introduction = MarkdownxField(verbose_name="Introduction", default="")
     icon = models.ImageField(verbose_name="Icon", upload_to=rename_image, blank=True, null=True)
     icon_small = ImageSpecField(source="icon", processors=[processors.Transpose(), ResizeToFill(200, 200)], format='JPEG')
 
     class Meta:
         verbose_name_plural = 'CustomUser'
+
+    def get_text_markdownx(self):
+        return mark_safe(markdownify(self.introduction))
 
     @delete_previous_file
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):

@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}{{ site_title }} | Update Introduction{% endblock %}
+
+{% block header %}
+  <h1>Update Introduction</h1>
+  <span class="subheading">Update Introduction.</span>
+{% endblock %}
+
+{% block content %}
+{% for key, errors in form.errors.items %}
+<ul class="alert alert-danger list-unstyled">{% for error in errors %}
+    <li>{{ error }}</li>
+{% endfor %}
+</ul>
+{% endfor %}
+
+<div class="row">
+  <form class="formUpdate" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <table class="table">
+      <tbody>
+        <tr>
+          <th>Current Introduction</th>
+          <td>{{ current_introduction }}</td>
+        </tr>
+        <tr>
+          <th>New {{ form.introduction.label }}</th>
+          <td>{{ form.introduction }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="form-group text-right" style="padding:20px 0">
+      <input type="submit" value="Submit" class="btn btn-primary" />
+    </div>
+  </form>
+</div>
+
+  <hr>
+
+{% endblock %}

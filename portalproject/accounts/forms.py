@@ -37,3 +37,20 @@ class IconChangeForm(forms.ModelForm):
     def clean_icon(self):
         icon = self.cleaned_data.get('icon')
         return icon
+
+
+class IntroductionChangeForm(forms.ModelForm):
+
+    class Meta:
+        model  = CustomUser
+        fields = ("introduction", )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs['class'] = "form-control"
+            field.widget.attrs['placeholder'] = ""
+
+    def clean_icon(self):
+        introduction = self.cleaned_data.get('introduction')
+        return introduction

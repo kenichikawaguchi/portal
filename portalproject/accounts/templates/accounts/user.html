@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}{{ site_title }} | User's Profile{% endblock %}
+
+{% block header %}
+  <h1>User's Profile</h1>
+  <span class="subheading">{{ target_user.username }}'s profile.</span>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+  <table class="table">
+    <tbody>
+      <tr>
+        <th>Username</th>
+        <td>{{ target_user.username }}</td>
+      </tr>
+      <tr>
+        <th>Icon</th>
+      {% if target_user.icon %}
+        <td><img src="{{ target_user.icon.url }}" width="200"></td>
+      {% else %}
+        <td>(No Icon Data)</td>
+      {% endif %}
+        </td>
+      </tr>
+      <tr>
+        <th>Introduction</th>
+        <td>{{ target_user.introduction }}</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="d-flex justify-content-center">
+  {% if return_url %}
+  <a href="{{ return_url }}">Back</a>
+  {% else %}
+  <a href="{% url 'blog:index' %}">Back</a>
+  {% endif %}
+  </div>
+</div>
+{% endblock %}

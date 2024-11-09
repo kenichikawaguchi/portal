@@ -20,7 +20,7 @@
       <div class="col-md-10 col-lg-8 col-xl-7">
         {% for record in orderby_records %}
           <div class="post-preview">
-            <a href="#">
+            <a href="#" id="{{ record.pk }}" >
               <h2 class="post-title">
               <a href="{% url 'blog:blog_detail' record.pk %}">{{ record.title }}</a></h2>
               <h3 class="post-subtitle">
@@ -56,11 +56,12 @@
                 {% endif %}
             </a>
             <p class="post-meta mt-2">
-              Posted by
-              {% if record.user.icon_small %}
-                <img src="{{ record.user.icon_small.url }}" class="rounded-circle" width="50">
-              {% endif %}
-               {{ record.user }}
+              <form action="{% url 'accounts:target_user' %}" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="target_user" value="{{ record.user }}">
+                <input type="hidden" name="return_url" value="{% url 'blog:index' %}#{{ record.pk }}">
+                <button type="submit" value="{{ record.user }}" class="btn btn-link">Posted by {% if record.user.icon_small %}<img src="{{ record.user.icon_small.url }}" class="rounded-circle" width="50">{% endif %} {{ record.user }}</button>
+              </form>
               </br>Posted at {{ record.created_at|date:"Y-m-d H:i:s T" }}{% tz_detect %}
               {% if record.is_updated %}
                 </br>Updated at {{ record.updated_at|date:"Y-m-d H:i:s T" }}{% tz_detect %}

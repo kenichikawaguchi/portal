@@ -57,14 +57,12 @@
     <div class="row">
       <div class="col-3">Posted by</div>
       <div class="col-9">
-        {% if object.user.icon_small %}
-          <img src="{{ object.user.icon_small.url }}" class="rounded-circle" width="50">
-        {% endif %}
-        {% if request.user == object.user %}
-          <mark>{{ object.user }}</mark>
-        {% else %}
-          {{ object.user }}
-        {% endif %}
+        <form action="{% url 'accounts:target_user' %}" method="POST">
+          {% csrf_token %}
+            <input type="hidden" name="target_user" value="{{ object.user }}">
+              <input type="hidden" name="return_url" value="{% url 'blog:blog_detail' object.pk %}">
+              <button type="submit" value="{{ object.user }}" class="btn btn-link">Posted by {% if object.user.icon_small %}<img src="{{ object.user.icon_small.url }}" class="rounded-circle" width="50">{% endif %} {{ object.user }}</button>
+        </form>
       </div>
     </div>
     <div class="row mb-2">
@@ -98,11 +96,13 @@
   <h2>Comments</h2>
   <ul>
   {% for a in comment_list %}
-    <li><div class="markdownx">{{ a.get_text_markdownx|safe }}</div> by
-    {% if a.commenter.icon_small %}
-      <img src="{{ a.commenter.icon_small.url }}" class="rounded-circle" width="50">
-    {% endif %}
-    {{ a.commenter }} at {{ a.created_at|date:"Y-m-d H:i:s T" }}{% tz_detect %}</li>
+    <li id="id_{{ a.id }}"><div class="markdownx">{{ a.get_text_markdownx|safe }}</div>
+    <form action="{% url 'accounts:target_user' %}" method="POST">
+      {% csrf_token %}
+        <input type="hidden" name="target_user" value="{{ a.commenter }}">
+          <input type="hidden" name="return_url" value="{% url 'blog:blog_detail' object.pk %}#id_{{ a.id }}">
+          <button type="submit" value="{{ a.commenter }}" class="btn btn-link"> by {% if a.commenter.icon_small %}<img src="{{ a.commenter.icon_small.url }}" class="rounded-circle" width="50">{% endif %} {{ a.commenter }} at {{ a.created_at|date:"Y-m-d H:i:s T" }}{% tz_detect %}</button>
+    </form>
   {% endfor %}
     </ul>
     </div>

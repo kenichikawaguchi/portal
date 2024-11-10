@@ -137,7 +137,8 @@ class Comment(models.Model):
 
 class Good(models.Model):
     gooder = models.ForeignKey(CustomUser, verbose_name="Gooder", on_delete=models.CASCADE)
-    good_to = models.ForeignKey(BlogPost, verbose_name="Blog Post", related_name="goods", on_delete=models.CASCADE)
+    good_to = models.ForeignKey(BlogPost, verbose_name="Blog Post", related_name="goods", on_delete=models.CASCADE, null=True, blank=True)
+    good_to2 = models.ForeignKey(Comment, verbose_name="Comment", related_name="goods2", on_delete=models.CASCADE, null=True, blank=True)
     created_at = models.DateTimeField(verbose_name="Created at", auto_now_add=True)
     updated_at = models.DateTimeField(verbose_name="Updated at", auto_now=True)
 
@@ -147,7 +148,11 @@ class Good(models.Model):
             models.UniqueConstraint(
                 fields=['good_to_id', 'gooder_id'],
                 name='good_to_gooder_unique'
-            )
+            ),
+            models.UniqueConstraint(
+                fields=['good_to2_id', 'gooder_id'],
+                name='good_to2_gooder_unique'
+            ),
         ]
 
     def __str__(self):

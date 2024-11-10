@@ -5,6 +5,8 @@ from django.contrib import messages
 
 from .forms import UsernameChangeForm, IconChangeForm, IntroductionChangeForm
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.urls import reverse_lazy, reverse
+from django.http import HttpResponseRedirect, Http404
 
 
 class UsernameChangeView(LoginRequiredMixin, View):
@@ -108,7 +110,14 @@ class TargetUserView(View):
         context = {}
         context["user"] = request.user
         target_username = request.user
-        user_obj = CustomUser.objects.get(username=target_username)
+        try:
+            user_obj = CustomUser.objects.get(username=target_username)
+        except Exception as e:
+            return HttpResponseRedirect(reverse_lazy('blog:index'))
+
+
+        if user_obj == None:
+            return redirect('blog:index')
         context["target_user"] = user_obj
         return render(request, 'accounts/user.html', context)
 

@@ -120,7 +120,8 @@ class BlogPost(models.Model):
 class Comment(models.Model):
     text = MarkdownxField(verbose_name="Comment", blank=False)
     commenter = models.ForeignKey(CustomUser, verbose_name="Commenter", on_delete=models.CASCADE)
-    comment_to = models.ForeignKey(BlogPost, verbose_name="Blog Post", related_name="comments", on_delete=models.CASCADE)
+    comment_to = models.ForeignKey(BlogPost, verbose_name="Blog Post", related_name="comments", on_delete=models.CASCADE, blank=True, null=True)
+    reply_to = models.ForeignKey('self', related_name="replies", on_delete=models.CASCADE, blank=True, null=True)
     created_at = models.DateTimeField(verbose_name="Created at", auto_now_add=True)
     updated_at = models.DateTimeField(verbose_name="Updated at", auto_now=True)
 

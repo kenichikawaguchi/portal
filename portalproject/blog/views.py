@@ -71,7 +71,7 @@ class BlogDetail(DetailView):
             context["private"] = False
 
         context["comment_list"] = (
-            Comment.objects.select_related("comment_to").filter(comment_to=blogpost).order_by('-created_at')
+            Comment.objects.select_related("comment_to").filter(comment_to=blogpost).prefetch_related("reply_to").order_by('-created_at')
         )
         context["form"] = CommentCreateForm
 
@@ -167,4 +167,63 @@ class CommentCreate(CreateView):
         comment.save()
 
         return redirect('blog:blog_detail', pk=post_pk)
+
+
+@method_decorator(login_required,name='dispatch')
+class CommentCreate2(CreateView):
+    model = Comment
+    form_class = CommentCreateForm
+
+    def form_valid(self, form):
+        post_pk = self.kwargs.get('pk')
+        parent = get_object_or_404(Comment, pk=post_pk)
+
+        comment = form.save(commit=False)
+        comment.commenter = self.request.user
+        comment.reply_to = parent
+        comment.save()
+
+        return redirect('blog:comment_detail', pk=post_pk)
+
+
+class CommentDetail(DetailView):
+    template_name = "comment.html"
+    model = Comment
+
+    def get(self, request, *args, **kwargs):
+        try:
+            result = super().get(request, *args, **kwargs)
+            comment = self.object
+        except Exception as e:
+            msg = str(e) + ": {}".format(request.path)
+            messages.warning(request, msg)
+            return HttpResponseRedirect(reverse_lazy('blog:index'))
+        comment = self.object
+
+        return result
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        comment = self.object
+
+        context["comment_list"] = (
+            Comment.objects.select_related("reply_to").filter(reply_to=comment).prefetch_related("replies").order_by('-created_at')
+        )
+        context["parent_list"] = []
+        current = comment
+        while True:
+            if current.comment_to:
+                context["parent_list"].append(current.comment_to)
+                break
+            else:
+                if current.reply_to:
+                    current = current.reply_to
+                    context["parent_list"].append(current)
+                else:
+                    break
+
+
+        context["form"] = CommentCreateForm
+
+        return context
 

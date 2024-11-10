@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% load tz_detect %}
+
+{% block title %}
+  {{ site_title }}
+{% endblock %}
+
+{% block header %}
+    <h1>Comment on {% if object.comment_to %}<a href="{% url 'blog:blog_detail' object.comment_to.pk %}" class="link-light">{{ object.comment_to.title }}</a>{% else %}<a href="{% url 'blog:comment_detail' object.reply_to.pk %}" class="link-light">{{ object.reply_to.get_text_markdownx|truncatechars_html:20 }}</a>{% endif %}</h1>
+{% endblock %}
+
+{% block content %}
+  {% for item in parent_list reversed %}
+    <div {% if item.commenter %}id="id_{{ item.id }}"{% endif %} class="row mb-2">
+      {% if item.title %}
+        <h2>{{ item.title }}</h2>
+      {% endif %}
+      <div class="markdownx">
+      {{ item.get_text_markdownx|safe }}
+      </div>
+      <div class="row">
+        <div class="col-3">Posted by</div>
+        <div class="col-9">
+          <form action="{% url 'accounts:target_user' %}" method="POST">
+            {% csrf_token %}
+              <input type="hidden" name="target_user" value="{% if item.user %}{{ item.user }}{% else %}{{ item.commenter }}{% endif %}">
+              <input type="hidden" name="return_url" value="{% url 'blog:comment_detail' object.pk %}{% if item.commenter %}#id_{{ item.id }}{% endif %}">
+              {% if item.user %}
+                <button type="submit" value="{{ item.user }}" class="btn btn-link">Posted by {% if item.user.icon_small %}<img src="{{ item.user.icon_small.url }}" class="rounded-circle" width="50">{% endif %} {{ item.user }}</button>
+              {% else %}
+                <button type="submit" value="{{ item.commenter }}" class="btn btn-link">Posted by {% if item.commenter.icon_small %}<img src="{{ item.commenter.icon_small.url }}" class="rounded-circle" width="50">{% endif %} {{ item.commenter }}</button>
+              {% endif %}
+          </form>
+        </div>
+      </div>
+      <div class="row mb-2">
+        <div class="col-3">Posted at</div>
+        <div class="col-9">{{ item.created_at|date:"Y-m-d H:i:s T" }}{% tz_detect %}</div>
+      </div>
+    </div>
+    <hr>
+  {% endfor %}
+  <div id="id_{{ object.id }}" class="row mb-2">
+    <div class="markdownx">
+    {{ object.get_text_markdownx|safe }}
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-3">Posted by</div>
+    <div class="col-9">
+      <form action="{% url 'accounts:target_user' %}" method="POST">
+        {% csrf_token %}
+          <input type="hidden" name="target_user" value="{{ object.commenter }}">
+          <input type="hidden" name="return_url" value="{% url 'blog:comment_detail' object.pk %}#id_{{ object.id }}">
+          <button type="submit" value="{{ object.commenter }}" class="btn btn-link">Posted by {% if object.commenter.icon_small %}<img src="{{ object.commenter.icon_small.url }}" class="rounded-circle" width="50">{% endif %} {{ object.commenter }}</button>
+      </form>
+    </div>
+  </div>
+  <div class="row mb-2">
+    <div class="col-3">Posted at</div>
+    <div class="col-9">{{ object.created_at|date:"Y-m-d H:i:s T" }}{% tz_detect %}</div>
+  </div>
+  <hr>
+    <span class="meta mb-2">
+      <a href={% url 'blog:index' %}>{{ site_title }}</a>
+    </span>
+
+  <hr>
+
+  <div class="row">
+  <h2>Replies</h2>
+  <ul>
+  {% for a in comment_list %}
+    <li id="id_{{ a.id }}"><div class="markdownx">{{ a.get_text_markdownx|safe }}</div>
+    <a href="{% url 'blog:comment_detail' a.id %}"><i class="fa-regular fa-comment"></i> {{ a.replies.count }}</a>
+    <form action="{% url 'accounts:target_user' %}" method="POST">
+      {% csrf_token %}
+        <input type="hidden" name="target_user" value="{{ a.commenter }}">
+        <input type="hidden" name="return_url" value="{% url 'blog:comment_detail' object.pk %}#id_{{ a.id }}">
+        <button type="submit" value="{{ a.commenter }}" class="btn btn-link"> by {% if a.commenter.icon_small %}<img src="{{ a.commenter.icon_small.url }}" class="rounded-circle" width="50">{% endif %} {{ a.commenter }} at {{ a.created_at|date:"Y-m-d H:i:s T" }}{% tz_detect %}</button>
+    </form>
+  {% endfor %}
+    </ul>
+    </div>
+  {% if user.is_authenticated %}
+  <hr>
+  <div class="row">
+  <h2>Post Reply</h2>
+  <form action="{% url 'blog:comment_create2' object.pk %}" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div>{{ form.text }}</div>
+    <div class="row mb-2 mt-2">
+      <div class="col d-flex justify-content-start">
+        <button type="submit" class="btn btn-primary">Send</button>
+      </div>
+    </div>
+  </form>
+  </div>
+  {% endif %}
+{% endblock %}

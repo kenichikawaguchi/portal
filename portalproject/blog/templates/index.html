@@ -68,7 +68,7 @@
               {% endif %}
             </p>
             <p class="post-meta mt-2">
-              <i class="fa-regular fa-comment"></i>{{ record.comments.count }}
+              <a href="{% url 'blog:blog_detail' record.pk %}"><i class="fa-regular fa-comment"></i>{{ record.comments.count }}</a></h2>
             </p>
           </div>
           <hr>

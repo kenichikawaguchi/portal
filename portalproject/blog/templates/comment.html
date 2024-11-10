@@ -20,6 +20,26 @@
       <div class="markdownx">
       {{ item.get_text_markdownx|safe }}
       </div>
+      {% if item.photo or item.photo2 or item.photo3 %}
+      <div class="row">
+        {% if item.photo %}
+          <div class="col-md">
+            <img src="{{ item.photo_small.url }}" width="200">
+          </div>
+        {% endif %}
+        {% if item.photo2 %}
+          <div class="col-md">
+            <img src="{{ item.photo2_small.url }}" width="200">
+          </div>
+        {% endif %}
+        {% if item.photo3 %}
+          <div class="col-md">
+            <img src="{{ item.photo3_small.url }}" width="200">
+          </div>
+        {% endif %}
+      </div>
+      </div>
+      {% endif %}
       <div class="row">
         <div class="col-3">Posted by</div>
         <div class="col-9">

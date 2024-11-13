@@ -16,4 +16,6 @@ urlpatterns = [
     path('comment/create/<int:pk>/', views.CommentCreate.as_view(), name='comment_create'),
     path('comment/create2/<int:pk>/', views.CommentCreate2.as_view(), name='comment_create2'),
     path('comment-detail/<int:pk>/', views.CommentDetail.as_view(), name='comment_detail'),
+    path('likes/create/<int:blogpost_id>/<int:user_id>/', views.CreateLikeView.as_view(), name='likes_create'),
+    path('likes/delete/<int:blogpost_id>/<int:user_id>/', views.DeleteLikeView.as_view(), name='likes_delete'),
 ]

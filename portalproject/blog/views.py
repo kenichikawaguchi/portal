@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.views.generic import ListView, DetailView, CreateView, TemplateView
-from .models import BlogPost, Comment, Good
+from .models import BlogPost, Comment, Like
 
 from django.views.generic import FormView, DeleteView, UpdateView
 from django.urls import reverse_lazy, reverse
@@ -12,14 +12,16 @@ from django.core.mail import EmailMessage
 from django.utils.decorators import method_decorator
 
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from django.shortcuts import redirect, get_object_or_404
 from django.db.models import Q
-from django.http import HttpResponseRedirect, Http404
+from django.http import HttpResponse, HttpResponseRedirect, Http404
 
 import os
 import pytz
 from django.utils import timezone
+import json
 
 
 class IndexView(ListView):
@@ -73,11 +75,12 @@ class BlogDetail(DetailView):
         context["comment_list"] = (
             Comment.objects.select_related("comment_to").filter(comment_to=blogpost).prefetch_related("reply_to").order_by('-created_at')
         )
-        context["form"] = CommentCreateForm
+        if self.request.user:
+            context["blogpost"] = BlogPost.with_state(self.request.user.id).filter(id=blogpost.id)[0]
+        else:
+            context["blogpost"] = None
 
-        context["good_list"] = (
-            Good.objects.select_related("good_to").filter(good_to=blogpost).order_by('-created_at')
-        )
+        context["form"] = CommentCreateForm
 
         return context
 
@@ -226,4 +229,33 @@ class CommentDetail(DetailView):
         context["form"] = CommentCreateForm
 
         return context
+
+
+class CreateLikeView(LoginRequiredMixin, CreateView):
+    def post(self, request, *args, **kwargs):
+        return_value = None
+        try:
+            Like.objects.create(user_id=kwargs['user_id'], blogpost_id=kwargs['blogpost_id'])
+            blogpost = BlogPost.with_state(kwargs['user_id']).get(pk=kwargs['blogpost_id'])
+            return_value = json.dumps({'like_cnt': blogpost.like_cnt, 'liked_by_me': blogpost.liked_by_me})
+            print(f'LikeCreateView return_value[{type(return_value)}]: ', return_value)
+        except BlogPost.DoesNotExist:
+            logging.critical('An unauthorized article was accessed')
+
+        return HttpResponse(return_value, status=200)
+
+
+class DeleteLikeView(LoginRequiredMixin, DeleteView):
+    def post(self, request, *args, **kwargs):
+        return_value = None
+        try:
+            Like.objects.filter(user_id=kwargs['user_id'], blogpost_id=kwargs['blogpost_id']).delete()
+            blogpost = BlogPost.with_state(kwargs['user_id']).get(pk=kwargs['blogpost_id'])
+            return_value = json.dumps({'like_cnt': blogpost.like_cnt, 'liked_by_me': blogpost.liked_by_me})
+            # TODO: When creating, the front receives json correctly, but when it becomes delete, an accident occurs ...why?
+            print(f'LikeDeleteView return_value[{type(return_value)}]: ', return_value)
+        except BlogPost.DoesNotExist:
+            logging.critical('An unauthorized article was accessed')
+
+        return HttpResponse(return_value, status=200)
 

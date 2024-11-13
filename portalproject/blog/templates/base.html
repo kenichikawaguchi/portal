@@ -152,5 +152,48 @@
     </script>
     <script src={% static 'js/scripts.js' %}>
     </script>
+    <script lang="js">
+      function getCookie(cookieName) {
+        let name = cookieName + "=";
+        let decodedCookie = decodeURIComponent(document.cookie);
+        let cookieArray = decodedCookie.split(';');
+        for(let i = 0; i < cookieArray.length; i++) {
+            let cookie = cookieArray[i].trim();
+            if (cookie.indexOf(name) == 0) {
+                return cookie.substring(name.length, cookie.length);
+            }
+        }
+        return null;
+      }
+
+      const likeToggles = document.getElementsByClassName('like_toggle');
+      for (let i = 0; i < likeToggles.length; i++) {
+          likeToggles[i].addEventListener('click', () => {
+              const blogpostId = likeToggles[i].dataset.blogpostId
+              {% if user.is_authenticated %}const userId = {{ user.id }}{% else %}location.href = "{% url 'account_login' %}"{% endif %}
+              const createOrDelete = parseInt(likeToggles[i].dataset.likedByMe) ? 'delete' : 'create'
+              fetch(`{% url 'blog:index' %}likes/${createOrDelete}/${blogpostId}/${userId}/`, {
+                  method: 'POST',
+                  headers: {
+                      "Content-Type": "application/json; charset=utf-8",
+                      "X-CSRFToken": getCookie('csrftoken')
+                  },
+                  body: JSON.stringify({"status": "requested from javascript."})
+              })
+              .then(response => response.json())
+              .then(json => {
+                  likeToggles[i].getElementsByTagName('span')[0].innerHTML = `(${json.like_cnt})`
+                  likeToggles[i].dataset.likedByMe = json.liked_by_me
+                  likeToggles[i].classList.remove('active')
+                  if (json.liked_by_me) {
+                      likeToggles[i].classList.add('active')
+                  }
+              })
+              .catch((error) => {
+                  console.error('Ooops!! There has been a problem with your fetch operation:', error)
+              })
+          })
+      }
+    </script>
   </body>
 </html>

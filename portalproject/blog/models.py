@@ -15,6 +15,9 @@ from markdownx.models import MarkdownxField
 from django.utils.safestring import mark_safe
 from markdownx.utils import markdownify
 
+from django.db.models.query import QuerySet
+from django.db.models import Count, Case, IntegerField, When
+
 
 def delete_previous_file(function):
     def wrapper(*args, **kwargs):
@@ -94,6 +97,18 @@ class BlogPost(models.Model):
     photo2_small = ImageSpecField(source="photo2", processors=[processors.Transpose(), ResizeToFill(200, 200)], format="JPEG")
     photo3_small = ImageSpecField(source="photo3", processors=[processors.Transpose(), ResizeToFill(200, 200)], format="JPEG")
 
+    @staticmethod
+    def with_state(user_id: int) -> QuerySet:
+        return BlogPost.objects.annotate(
+            like_cnt=Count('likes_on_blogposts'),
+            liked_by_me = Case(
+                When(id__in=Like.objects.filter(user_id=user_id).values('blogpost_id'),
+                    then=1),
+                default=0,
+                output_field=IntegerField()
+            )
+        )
+
     def get_text_markdownx(self):
         return mark_safe(markdownify(self.content))
 
@@ -135,28 +150,28 @@ class Comment(models.Model):
         return f'{self.pk} {self.text[:15] } *BY* {self.commenter} *TO* {self.comment_to}'
 
 
-class Good(models.Model):
-    gooder = models.ForeignKey(CustomUser, verbose_name="Gooder", on_delete=models.CASCADE)
-    good_to = models.ForeignKey(BlogPost, verbose_name="Blog Post", related_name="goods", on_delete=models.CASCADE, null=True, blank=True)
-    good_to2 = models.ForeignKey(Comment, verbose_name="Comment", related_name="goods2", on_delete=models.CASCADE, null=True, blank=True)
+class Like(models.Model):
+    user = models.ForeignKey(CustomUser, verbose_name="User", on_delete=models.CASCADE)
+    blogpost = models.ForeignKey(BlogPost, verbose_name="Blog Post", related_name="likes_on_blogposts", on_delete=models.CASCADE, null=True, blank=True)
+    comment = models.ForeignKey(Comment, verbose_name="Comment", related_name="likes_on_comments", on_delete=models.CASCADE, null=True, blank=True)
     created_at = models.DateTimeField(verbose_name="Created at", auto_now_add=True)
     updated_at = models.DateTimeField(verbose_name="Updated at", auto_now=True)
 
     class Meta:
-        db_table = "goods"
+        db_table = "likes"
         constraints = [
             models.UniqueConstraint(
-                fields=['good_to_id', 'gooder_id'],
-                name='good_to_gooder_unique'
+                fields=['blogpost_id', 'user_id'],
+                name='blogpost_user_unique'
             ),
             models.UniqueConstraint(
-                fields=['good_to2_id', 'gooder_id'],
-                name='good_to2_gooder_unique'
+                fields=['comment_id', 'user_id'],
+                name='comment_user_unique'
             ),
         ]
 
     def __str__(self):
-        return f'{self.pk} {self.gooder} {self.good_to}'
+        return f'{self.pk} {self.user} {self.blogpost} {self.comment}'
 
 
 class Tag(models.Model):

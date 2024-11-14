@@ -92,20 +92,12 @@
   {% endif %}
 
   <div class="col-sm">
-      <div class="card" style="width: 18rem;">
-        <ul class="list-group list-group-flush">
-          <li class="list-group-item">
-            <div class="card-body">
               <button
                   type="button"
                   class="like_toggle btn btn-outline-secondary {{ blogpost.liked_by_me|yesno:'active,' }}"
                   data-blogpost-id="{{ blogpost.id }}"
                   data-liked-by-me="{{ blogpost.liked_by_me }}"
-              >Like <span>({{ blogpost.like_cnt }})</span></button>
-            </div>
-          </li>
-        </ul>
-      </div>
+              ><i class="fa-regular fa-heart"></i> <span>{{ blogpost.like_cnt }}</span></button>
   </div>
 
   <hr>

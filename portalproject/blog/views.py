@@ -32,9 +32,9 @@ class IndexView(ListView):
 
     def get_queryset(self):
         if self.request.user.id:
-            queryset = BlogPost.objects.prefetch_related('comments').filter(Q(is_public=True) | Q(user = self.request.user)).order_by('-updated_at')
+            queryset = BlogPost.with_state(self.request.user.id).prefetch_related('comments').filter(Q(is_public=True) | Q(user = self.request.user)).order_by('-updated_at')
         else:
-            queryset = BlogPost.objects.prefetch_related('comments').filter(Q(is_public=True)).order_by('-updated_at')
+            queryset = BlogPost.with_state(self.request.user.id).prefetch_related('comments').filter(Q(is_public=True)).order_by('-updated_at')
 
         return queryset
 
@@ -232,10 +232,18 @@ class CommentDetail(DetailView):
 
 
 class CreateLikeView(LoginRequiredMixin, CreateView):
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return queryset
+
     def post(self, request, *args, **kwargs):
         return_value = None
         try:
             Like.objects.create(user_id=kwargs['user_id'], blogpost_id=kwargs['blogpost_id'])
+        except Exception as e:
+            logging.critical('An unauthorized article was accessed')
+
+        try:
             blogpost = BlogPost.with_state(kwargs['user_id']).get(pk=kwargs['blogpost_id'])
             return_value = json.dumps({'like_cnt': blogpost.like_cnt, 'liked_by_me': blogpost.liked_by_me})
             print(f'LikeCreateView return_value[{type(return_value)}]: ', return_value)
@@ -246,13 +254,16 @@ class CreateLikeView(LoginRequiredMixin, CreateView):
 
 
 class DeleteLikeView(LoginRequiredMixin, DeleteView):
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return queryset
+
     def post(self, request, *args, **kwargs):
         return_value = None
         try:
             Like.objects.filter(user_id=kwargs['user_id'], blogpost_id=kwargs['blogpost_id']).delete()
             blogpost = BlogPost.with_state(kwargs['user_id']).get(pk=kwargs['blogpost_id'])
             return_value = json.dumps({'like_cnt': blogpost.like_cnt, 'liked_by_me': blogpost.liked_by_me})
-            # TODO: When creating, the front receives json correctly, but when it becomes delete, an accident occurs ...why?
             print(f'LikeDeleteView return_value[{type(return_value)}]: ', return_value)
         except BlogPost.DoesNotExist:
             logging.critical('An unauthorized article was accessed')

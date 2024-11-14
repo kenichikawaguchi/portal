@@ -70,6 +70,14 @@
             <p class="post-meta mt-2">
               <a href="{% url 'blog:blog_detail' record.pk %}"><i class="fa-regular fa-comment"></i>{{ record.comments.count }}</a></h2>
             </p>
+            <div class="col-sm">
+              <button
+                  type="button"
+                  class="like_toggle btn btn-outline-secondary {{ record.liked_by_me|yesno:'active,' }}"
+                  data-blogpost-id="{{ record.id }}"
+                  data-liked-by-me="{{ record.liked_by_me }}"
+              ><i class="fa-regular fa-heart"></i> <span>{{ record.like_cnt }}</span></button>
+            </div>
           </div>
           <hr>
         {% endfor %}

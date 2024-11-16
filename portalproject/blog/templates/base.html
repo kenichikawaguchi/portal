@@ -185,8 +185,13 @@
                   likeToggles[i].getElementsByTagName('span')[0].innerHTML = ` ${json.like_cnt}`
                   likeToggles[i].dataset.likedByMe = json.liked_by_me
                   likeToggles[i].firstElementChild.classList.remove('liked')
+                  likeToggles[i].firstElementChild.classList.remove('fa-regular')
+                  likeToggles[i].firstElementChild.classList.remove('fa-solid')
                   if (json.liked_by_me) {
                       likeToggles[i].firstElementChild.classList.add('liked')
+                      likeToggles[i].firstElementChild.classList.add('fa-solid')
+                  } else {
+                      likeToggles[i].firstElementChild.classList.add('fa-regular')
                   }
               })
               .catch((error) => {

@@ -97,7 +97,7 @@
                   class="like_toggle btn"
                   data-blogpost-id="{{ blogpost.id }}"
                   data-liked-by-me="{{ blogpost.liked_by_me }}"
-              ><i class="fa-regular fa-heart{% if blogpost.liked_by_me %} liked{% endif %}"></i> <span class="fst-italic">{{ blogpost.like_cnt }}</span></button>
+              ><i class="{% if blogpost.liked_by_me %}fa-solid fa-heart liked{% else %}fa-regular fa-heart{% endif %}"></i> <span class="fst-italic">{{ blogpost.like_cnt }}</span></button>
   </div>
 
   <hr>

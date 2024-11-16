@@ -94,10 +94,10 @@
   <div class="col-sm">
               <button
                   type="button"
-                  class="like_toggle btn btn-outline-secondary {{ blogpost.liked_by_me|yesno:'active,' }}"
+                  class="like_toggle btn"
                   data-blogpost-id="{{ blogpost.id }}"
                   data-liked-by-me="{{ blogpost.liked_by_me }}"
-              ><i class="fa-regular fa-heart"></i> <span>{{ blogpost.like_cnt }}</span></button>
+              ><i class="fa-regular fa-heart{% if blogpost.liked_by_me %} liked{% endif %}"></i> <span class="fst-italic">{{ blogpost.like_cnt }}</span></button>
   </div>
 
   <hr>

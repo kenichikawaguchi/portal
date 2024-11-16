@@ -182,11 +182,11 @@
               })
               .then(response => response.json())
               .then(json => {
-                  likeToggles[i].getElementsByTagName('span')[0].innerHTML = `${json.like_cnt}`
+                  likeToggles[i].getElementsByTagName('span')[0].innerHTML = ` ${json.like_cnt}`
                   likeToggles[i].dataset.likedByMe = json.liked_by_me
-                  likeToggles[i].classList.remove('active')
+                  likeToggles[i].firstElementChild.classList.remove('liked')
                   if (json.liked_by_me) {
-                      likeToggles[i].classList.add('active')
+                      likeToggles[i].firstElementChild.classList.add('liked')
                   }
               })
               .catch((error) => {

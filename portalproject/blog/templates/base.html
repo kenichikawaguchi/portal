@@ -182,7 +182,7 @@
               })
               .then(response => response.json())
               .then(json => {
-                  likeToggles[i].getElementsByTagName('span')[0].innerHTML = ` ${json.like_cnt}`
+                  likeToggles[i].nextElementSibling.getElementsByTagName('span')[0].innerHTML = ` ${json.like_cnt}`
                   likeToggles[i].dataset.likedByMe = json.liked_by_me
                   likeToggles[i].firstElementChild.classList.remove('liked')
                   likeToggles[i].firstElementChild.classList.remove('fa-regular')
@@ -198,6 +198,59 @@
                   console.error('Ooops!! There has been a problem with your fetch operation:', error)
               })
           })
+      }
+
+      function closeModal() {
+        document.body.removeChild(modalElement);
+      }
+
+      function showModal(users, blogpostId) {
+        const target = document.getElementById(blogpostId+'_modal')
+        target.innerHTML = "";
+        for (user of users){
+          target.innerHTML += `<p>`;
+          if(user['icon'] != ""){
+            target.innerHTML += `<img src="${user['icon']}" class="rounded-circle" width="50"> `;
+          }
+          target.innerHTML += `${user['username']} `;
+          // const created_at_tz = new Date(user['created_at']).toString()
+          // target.innerHTML += `at ${user['created_at']}</p>`;
+          const created_at_tz = new Date(user['created_at'])
+          const year = created_at_tz.getFullYear()
+          const month = created_at_tz.getMonth() + 1
+          const date = created_at_tz.getDate()
+          const hour = formatTime(created_at_tz.getHours());
+          const minute = formatTime(created_at_tz.getMinutes());
+          const second = formatTime(created_at_tz.getSeconds());
+          const localetime = created_at_tz.toLocaleString()
+          function formatTime(val) {
+            return ("0" + val).slice(-2);
+          }
+          // target.innerHTML += `at ${year}-${month}-${date} ${hour}:${minute}:${second} ${tzoffset}</p>`;
+          target.innerHTML += `at ${localetime}</p>`;
+        }
+      }
+
+      const likesCheck = document.getElementsByClassName('check-likes');
+      for (let i = 0; i < likesCheck.length; i++) {
+        likesCheck[i].addEventListener('click', () => {
+          const blogpostId = likesCheck[i].dataset.blogpostId
+          fetch(`{% url 'blog:index' %}likes/popup/${blogpostId}/`, {
+            method: 'POST',
+            headers: {
+              "Content-Type": "application/json; charset=utf-8",
+              "X-CSRFToken": getCookie('csrftoken')
+            },
+            body: JSON.stringify({"status": "requested from javascript."})
+          })
+          .then(response => response.json())
+          .then(json => {
+            showModal(json, blogpostId);
+          })
+          .catch((error) => {
+            console.error('Ooops!! There has been a problem with your fetch operation:', error)
+          })
+        })
       }
     </script>
   </body>

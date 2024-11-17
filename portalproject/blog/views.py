@@ -23,6 +23,8 @@ import pytz
 from django.utils import timezone
 import json
 
+import datetime
+
 
 class IndexView(ListView):
     template_name = "index.html"
@@ -270,3 +272,47 @@ class DeleteLikeView(LoginRequiredMixin, DeleteView):
 
         return HttpResponse(return_value, status=200)
 
+
+class LikesView(DetailView):
+    model = BlogPost
+    template_name = "likes.html"
+    context_object_name = 'orderby_records'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        blogpost = self.object
+
+        print(kwargs)
+        context["like_list"] = (
+            Like.objects.select_related("user").filter(blogpost=blogpost).order_by('-created_at')
+        )
+        print(context["like_list"])
+
+        return context
+
+
+class LikesPopupView(DetailView):
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return queryset
+
+    def post(self, request, *args, **kwargs):
+        return_value = None
+        try:
+            likes = Like.objects.select_related("user").filter(blogpost_id=kwargs['pk']).order_by('-created_at')
+            results = []
+            for like in likes:
+                result = {}
+                result['username'] = like.user.username
+                result['created_at'] = datetime.datetime.strftime(like.created_at, "%Y-%m-%dT%H:%M:%SZ")
+                if like.user.icon_small:
+                    result['icon'] = like.user.icon_small.url
+                else:
+                    result['icon'] = ""
+                results.append(result)
+            print(results)
+            return_value = json.dumps(results, default=str)
+        except Like.DoesNotExist:
+            pass
+
+        return HttpResponse(return_value, status=200)

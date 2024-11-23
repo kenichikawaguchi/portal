@@ -41,7 +41,14 @@
   </div>
 </div>
 <div class="button_field mb-2">
-  {% if user.username == target_user.username %}
+  {% if user.is_authenticated == False %}
+    {% if target_user.username in request.path %}
+      <a href="{% url 'account_login' %}?next={{ request.path }}" class="btn btn-primary">Log In</a>
+    {% else %}
+      <a href="{% url 'account_login' %}?next={{ request.path }}{{ target_user.username}}/" class="btn btn-primary">Log In</a>
+    {% endif %}
+    <p>You are not logged in.</p>
+  {% elif user.username == target_user.username %}
     <a href="{% url 'accounts:profile' %}" class="btn btn-info">Edit Profile</a><p> {{ target_user.username }} is yourself.</p>
   {% elif connected %}
     <a href="{% url 'accounts:unfollow' username=target_user.username %}" class="btn btn-dark">Unfollow</a> <p>you are {{ target_user.username }}'s follower.</p>

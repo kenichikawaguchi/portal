@@ -64,6 +64,7 @@ class BlogDetail(DetailView):
                     msg = "Sorry, you have no right to see: " + ": {}".format(request.path)
                     messages.warning(request, msg)
                     return HttpResponseRedirect(reverse_lazy('blog:index'))
+        request.session["return_url"] = request.path
         return result
 
     def get_context_data(self, **kwargs):
@@ -83,6 +84,7 @@ class BlogDetail(DetailView):
             context["blogpost"] = None
 
         context["form"] = CommentCreateForm
+
 
         return context
 

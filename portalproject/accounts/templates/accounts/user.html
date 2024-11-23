@@ -40,4 +40,61 @@
   {% endif %}
   </div>
 </div>
+<div class="button_field mb-2">
+  {% if user.username == target_user.username %}
+    <a href="{% url 'accounts:profile' %}" class="btn btn-info">Edit Profile</a><p> {{ target_user.username }} is yourself.</p>
+  {% elif connected %}
+    <a href="{% url 'accounts:unfollow' username=target_user.username %}" class="btn btn-dark">Unfollow</a> <p>you are {{ target_user.username }}'s follower.</p>
+  {% else %}
+    <a href="{% url 'accounts:follow' username=target_user.username %}" class="btn btn-light">Follow</a> <p>you are not {{ target_user.username }}'s follower.</p>
+  {% endif %}
+</div>
+<div class="follow_count">
+  <ul class="list-group">
+    <li class="list-group-item">
+      <button class="btn btn-link ps-1" id="check-followings" data-bs-toggle="modal" data-bs-target="#follow-list" data-user-name="{{ target_user.username }}"># of {{ target_user.username }}'s followings {{ following }}</button>
+    </li>
+    <li class="list-group-item">
+      <button class="btn btn-link ps-1" id="check-followers" data-bs-toggle="modal" data-bs-target="#follow-list" data-user-name="{{ target_user.username }}"># of {{ target_user.username }}'s followers {{ follower }}</button>
+    </li>
+  </ul>
+</div>
+
+<div class="modal fade" id="follow-list" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{ target_user.username }}'s followings/followers</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <p id="showfollows"></p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+      const followingsCheck = document.getElementById('check-followings');
+      followingsCheck.addEventListener('click', () => {
+        const userName = followingsCheck.dataset.userName;
+        fetchUrlShowModal(`{% url 'blog:index' %}accounts/profile/follow/popup/followings/${userName}/`, 'showfollows');
+        const follow_list = document.getElementById("follow-list");
+        const follow_list_titles = follow_list.getElementsByClassName("modal-title");
+        follow_list_titles[0].innerHTML = "{{ target_user.username }}'s follwings";
+      });
+
+      const followersCheck = document.getElementById('check-followers');
+      followersCheck.addEventListener('click', () => {
+        const userName = followersCheck.dataset.userName;
+        fetchUrlShowModal(`{% url 'blog:index' %}accounts/profile/follow/popup/followers/${userName}/`, 'showfollows');
+        const follow_list = document.getElementById("follow-list");
+        const follow_list_titles = follow_list.getElementsByClassName("modal-title");
+        follow_list_titles[0].innerHTML = "{{ target_user.username }}'s follwers";
+      });
+</script>
+
 {% endblock %}

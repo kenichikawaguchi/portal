@@ -204,38 +204,37 @@
         document.body.removeChild(modalElement);
       }
 
-      function showModal(users, blogpostId) {
-        const target = document.getElementById(blogpostId+'_modal')
+      function showModal(users, showModalId) {
+        const target = document.getElementById(showModalId)
         target.innerHTML = "";
         for (user of users){
-          target.innerHTML += `<p>`;
+          // target.innerHTML += `<p>`;
           if(user['icon'] != ""){
-            target.innerHTML += `<img src="${user['icon']}" class="rounded-circle" width="50"> `;
+            target.innerHTML += `<a href="{% url 'accounts:target_user' %}${user['username']}"><img src="${user['icon']}" class="rounded-circle" width="50"> ${user['username']}</a> `;
+          } else {
+            target.innerHTML += `<a href="{% url 'accounts:target_user' %}${user['username']}">${user['username']}</a> `;
           }
-          target.innerHTML += `${user['username']} `;
           // const created_at_tz = new Date(user['created_at']).toString()
           // target.innerHTML += `at ${user['created_at']}</p>`;
-          const created_at_tz = new Date(user['created_at'])
-          const year = created_at_tz.getFullYear()
-          const month = created_at_tz.getMonth() + 1
-          const date = created_at_tz.getDate()
+          const created_at_tz = new Date(user['created_at']);
+          const year = created_at_tz.getFullYear();
+          const month = created_at_tz.getMonth() + 1;
+          const date = created_at_tz.getDate();
           const hour = formatTime(created_at_tz.getHours());
           const minute = formatTime(created_at_tz.getMinutes());
           const second = formatTime(created_at_tz.getSeconds());
-          const localetime = created_at_tz.toLocaleString()
+          const localetime = created_at_tz.toLocaleString();
           function formatTime(val) {
             return ("0" + val).slice(-2);
           }
           // target.innerHTML += `at ${year}-${month}-${date} ${hour}:${minute}:${second} ${tzoffset}</p>`;
-          target.innerHTML += `at ${localetime}</p>`;
+          // target.innerHTML += `at ${localetime}</p>`;
+          target.innerHTML += `at ${localetime}</br>`;
         }
       }
 
-      const likesCheck = document.getElementsByClassName('check-likes');
-      for (let i = 0; i < likesCheck.length; i++) {
-        likesCheck[i].addEventListener('click', () => {
-          const blogpostId = likesCheck[i].dataset.blogpostId
-          fetch(`{% url 'blog:index' %}likes/popup/${blogpostId}/`, {
+      function fetchUrlShowModal(url, showModalId) {
+          fetch(url, {
             method: 'POST',
             headers: {
               "Content-Type": "application/json; charset=utf-8",
@@ -245,13 +244,21 @@
           })
           .then(response => response.json())
           .then(json => {
-            showModal(json, blogpostId);
+            showModal(json, showModalId);
           })
           .catch((error) => {
             console.error('Ooops!! There has been a problem with your fetch operation:', error)
           })
-        })
       }
+
+      const likesCheck = document.getElementsByClassName('check-likes');
+      for (let i = 0; i < likesCheck.length; i++) {
+        likesCheck[i].addEventListener('click', () => {
+          const blogpostId = likesCheck[i].dataset.blogpostId;
+          fetchUrlShowModal(`{% url 'blog:index' %}likes/popup/${blogpostId}/`, blogpostId+'_modal');
+        });
+      }
+
     </script>
   </body>
 </html>

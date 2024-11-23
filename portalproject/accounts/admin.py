@@ -3,7 +3,7 @@ from django.contrib.auth.admin import UserAdmin
 from django.utils.translation import gettext as _
 
 from django.contrib.auth import get_user_model
-from .models import CustomUser
+from .models import CustomUser, Connection
 
 
 class CustomUserAdmin(UserAdmin):
@@ -38,3 +38,4 @@ class CustomUserAdmin(UserAdmin):
 CustomUser = get_user_model()
 
 admin.site.register(CustomUser, CustomUserAdmin)
+admin.site.register(Connection)

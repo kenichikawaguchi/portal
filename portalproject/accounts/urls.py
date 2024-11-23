@@ -10,4 +10,9 @@ urlpatterns = [
     path('update_icon/', views.IconChangeView.as_view(), name="update_icon"),
     path('update_introduction/', views.IntroductionChangeView.as_view(), name="update_introduction"),
     path('target_user/', views.TargetUserView.as_view(), name="target_user"),
+    path('target_user/<slug:username>/', views.TargetUserView.as_view(), name="target_user_w_username"),
+    path('<slug:username>', views.ProfileDetail.as_view(), name='profile_detail'),
+    path('follow/<slug:username>/', views.follow_view, name='follow'),
+    path('unfollow/<slug:username>/', views.unfollow_view, name='unfollow'),
+    path('follow/popup/<slug:follow>/<slug:username>/', views.FollowPopupView.as_view(), name='follow_popup'),
 ]

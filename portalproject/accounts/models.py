@@ -63,3 +63,13 @@ class CustomUser(AbstractUser):
     @delete_previous_file
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         super(CustomUser, self).save()
+
+
+class Connection(models.Model):
+    follower = models.ForeignKey(CustomUser, related_name='follower', on_delete=models.CASCADE)
+    following = models.ForeignKey(CustomUser, related_name='following', on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return "{} : {}".format(self.follower.username, self.following.username)
+

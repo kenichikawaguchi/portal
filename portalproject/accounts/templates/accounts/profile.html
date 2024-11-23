@@ -82,7 +82,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">{{ target_user.username }}'s followings/followers</h5>
+        <h5 class="modal-title">{{ user.username }}'s followings/followers</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body">
@@ -106,7 +106,7 @@
         fetchUrlShowModal(`{% url 'blog:index' %}accounts/profile/follow/popup/followings/${userName}/`, 'showfollows');
         const follow_list = document.getElementById("follow-list");
         const follow_list_titles = follow_list.getElementsByClassName("modal-title");
-        follow_list_titles[0].innerHTML = "{{ target_user.username }}'s follwings";
+        follow_list_titles[0].innerHTML = "{{ user.username }}'s follwings";
       });
 
       const followersCheck = document.getElementById('check-followers');
@@ -115,7 +115,7 @@
         fetchUrlShowModal(`{% url 'blog:index' %}accounts/profile/follow/popup/followers/${userName}/`, 'showfollows');
         const follow_list = document.getElementById("follow-list");
         const follow_list_titles = follow_list.getElementsByClassName("modal-title");
-        follow_list_titles[0].innerHTML = "{{ target_user.username }}'s follwers";
+        follow_list_titles[0].innerHTML = "{{ user.username }}'s follwers";
       });
 </script>
 {% endblock %}

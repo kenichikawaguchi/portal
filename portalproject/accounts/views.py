@@ -87,6 +87,9 @@ class CustomUserView(LoginRequiredMixin, View):
                 request.session["return_url"] = "blog:index"
             context["return_url"] = request.session["return_url"]
 
+        context['following'] = Connection.objects.filter(follower=request.user).count()
+        context['follower'] = Connection.objects.filter(following=request.user).count()
+
         return render(request, 'accounts/profile.html', context)
 
 

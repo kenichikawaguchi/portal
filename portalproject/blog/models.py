@@ -87,6 +87,7 @@ class BlogPost(models.Model):
     # content = models.TextField(verbose_name="Content")
     content = MarkdownxField(verbose_name="Content")
     is_public = models.BooleanField('public content?', default=True)
+    only_friends = models.BooleanField('only-friends content?', default=False)
     photo = models.ImageField(verbose_name="Photo", upload_to=rename_image, blank=True, null=True)
     photo2 = models.ImageField(verbose_name="Photo2", upload_to=rename_image, blank=True, null=True)
     photo3 = models.ImageField(verbose_name="Photo3", upload_to=rename_image, blank=True, null=True)

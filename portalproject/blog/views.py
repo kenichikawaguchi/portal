@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.views.generic import ListView, DetailView, CreateView, TemplateView
 from .models import BlogPost, Comment, Like
+from accounts.models import Connection
 
 from django.views.generic import FormView, DeleteView, UpdateView
 from django.urls import reverse_lazy, reverse
@@ -64,6 +65,24 @@ class BlogDetail(DetailView):
                     msg = "Sorry, you have no right to see: " + ": {}".format(request.path)
                     messages.warning(request, msg)
                     return HttpResponseRedirect(reverse_lazy('blog:index'))
+
+        if blogpost.only_friends == True and request.user != blogpost.user:
+            if request.user.id == None:
+                msg = "Sorry, you have no right to see: " + ": {}".format(request.path)
+                messages.warning(request, msg)
+                return HttpResponseRedirect(reverse_lazy('blog:index'))
+            try:
+                typeA = Connection.objects.filter(follower=request.user, following=blogpost.user)
+                typeB = Connection.objects.filter(follower=blogpost.user, following=request.user)
+                print("typeA: ", str(typeA))
+                print("typeB: ", str(typeB))
+                if typeA.count() == 0:
+                    print("typeA is None")
+            except Connection.DoesNotExist:
+                msg = "Sorry, you have no right to see: " + ": {}".format(request.path)
+                messages.warning(request, msg)
+                return HttpResponseRedirect(reverse_lazy('blog:index'))
+
         request.session["return_url"] = request.path
         return result
 

@@ -27,6 +27,10 @@
           <td>{{ form.is_public }}</td>
         </tr>
         <tr>
+          <th>{{ form.only_friends.label }}</th>
+          <td>{{ form.only_friends }}</td>
+        </tr>
+        <tr>
           <th>{{ form.photo.label }}</th>
           {% if form.photo.value %}
           <td>

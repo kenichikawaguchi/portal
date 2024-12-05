@@ -75,6 +75,11 @@
         <td><button class="btn btn-link ps-1" id="check-followers" data-bs-toggle="modal" data-bs-target="#follow-list" data-user-name="{{ user.username }}">{{ follower }}</button></td>
         <td></td>
       </tr>
+      <tr>
+        <th># of friends</th>
+        <td><button class="btn btn-link ps-1" id="check-friends" data-bs-toggle="modal" data-bs-target="#follow-list" data-user-name="{{ user.username }}">{{ friends }}</button></td>
+        <td></td>
+      </tr>
     </tbody>
   </table>
 
@@ -116,6 +121,15 @@
         const follow_list = document.getElementById("follow-list");
         const follow_list_titles = follow_list.getElementsByClassName("modal-title");
         follow_list_titles[0].innerHTML = "{{ user.username }}'s follwers";
+      });
+
+      const friendsCheck = document.getElementById('check-friends');
+      friendsCheck.addEventListener('click', () => {
+        const userName = friendsCheck.dataset.userName;
+        fetchUrlShowModal(`{% url 'blog:index' %}accounts/profile/follow/popup/friends/${userName}/`, 'showfollows');
+        const follow_list = document.getElementById("follow-list");
+        const follow_list_titles = follow_list.getElementsByClassName("modal-title");
+        follow_list_titles[0].innerHTML = "{{ user.username }}'s friends";
       });
 </script>
 {% endblock %}

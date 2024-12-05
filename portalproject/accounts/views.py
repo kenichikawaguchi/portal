@@ -89,6 +89,7 @@ class CustomUserView(LoginRequiredMixin, View):
 
         context['following'] = Connection.objects.filter(follower=request.user).count()
         context['follower'] = Connection.objects.filter(following=request.user).count()
+        context['friends'] = request.user.friends().count()
 
         return render(request, 'accounts/profile.html', context)
 
@@ -275,7 +276,7 @@ class FollowPopupView(DetailView):
                         result['icon'] = ""
                     results.append(result)
 
-            else:
+            elif kwargs['follow'] == 'follower':
                 follows = Connection.objects.filter(following__username=kwargs['username']).order_by('-created_at')
                 for follow in follows:
                     result = {}
@@ -284,6 +285,20 @@ class FollowPopupView(DetailView):
 
                     if follow.follower.icon_small:
                         result['icon'] = follow.follower.icon_small.url
+                    else:
+                        result['icon'] = ""
+                    results.append(result)
+
+            else:
+                me = CustomUser.objects.filter(username=kwargs['username'])[0]
+                friends = me.friends()
+                for friend in friends:
+                    result = {}
+                    result['username'] = friend.username
+                    result['created_at'] = datetime.datetime.strftime(friend.date_joined, "%Y-%m-%dT%H:%M:%SZ")
+
+                    if friend.icon_small:
+                        result['icon'] = friend.icon_small.url
                     else:
                         result['icon'] = ""
                     results.append(result)

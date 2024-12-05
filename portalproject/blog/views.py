@@ -27,6 +27,14 @@ import json
 import datetime
 
 
+def Q_open():
+    return Q(is_public=True) & Q(only_friends=False)
+
+
+def Q_friends(friends):
+    return Q(is_public=True) & Q(user__in=friends)
+
+
 class IndexView(ListView):
     template_name = "index.html"
     context_object_name = 'orderby_records'
@@ -35,9 +43,9 @@ class IndexView(ListView):
 
     def get_queryset(self):
         if self.request.user.id:
-            queryset = BlogPost.with_state(self.request.user.id).prefetch_related('comments').filter(Q(is_public=True) | Q(user = self.request.user)).order_by('-updated_at')
+            queryset = BlogPost.with_state(self.request.user.id).prefetch_related('comments').filter(Q_friends(self.request.user.friends()) | Q(user = self.request.user)).order_by('-updated_at')
         else:
-            queryset = BlogPost.with_state(self.request.user.id).prefetch_related('comments').filter(Q(is_public=True)).order_by('-updated_at')
+            queryset = BlogPost.with_state(self.request.user.id).prefetch_related('comments').filter(Q_open()).order_by('-updated_at')
 
         return queryset
 

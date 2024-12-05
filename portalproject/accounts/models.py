@@ -11,6 +11,9 @@ from markdownx.models import MarkdownxField
 from django.utils.safestring import mark_safe
 from markdownx.utils import markdownify
 
+from django.db.models import Prefetch
+from django.db.models.expressions import RawSQL
+
 
 def delete_previous_file(function):
     def wrapper(*args, **kwargs):
@@ -56,6 +59,11 @@ class CustomUser(AbstractUser):
 
     class Meta:
         verbose_name_plural = 'CustomUser'
+
+    def friends(self):
+        friends = CustomUser.objects.filter(id__in=RawSQL('SELECT connect_A.follower_id FROM accounts_connection as connect_A INNER JOIN accounts_connection as connect_B on connect_A.follower_id = connect_B.following_id WHERE connect_A.following_id = ' + str(self.id) + ' AND connect_B.follower_id = ' + str(self.id), []))
+
+        return friends
 
     def get_text_markdownx(self):
         return mark_safe(markdownify(self.introduction))

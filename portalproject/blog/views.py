@@ -43,9 +43,9 @@ class IndexView(ListView):
 
     def get_queryset(self):
         if self.request.user.id:
-            queryset = BlogPost.with_state(self.request.user.id).prefetch_related('comments').filter(Q_friends(self.request.user.friends()) | Q(user = self.request.user)).order_by('-updated_at')
+            queryset = BlogPost.with_state(self.request.user.id).prefetch_related('comments').filter(Q_friends(self.request.user.friends()) | Q(user = self.request.user)).order_by('-created_at')
         else:
-            queryset = BlogPost.with_state(self.request.user.id).prefetch_related('comments').filter(Q_open()).order_by('-updated_at')
+            queryset = BlogPost.with_state(self.request.user.id).prefetch_related('comments').filter(Q_open()).order_by('-created_at')
 
         return queryset
 

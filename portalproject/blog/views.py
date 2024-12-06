@@ -32,7 +32,7 @@ def Q_open():
 
 
 def Q_friends(friends):
-    return Q(is_public=True) & Q(user__in=friends)
+    return Q(is_public=True) & (Q(user__in=friends) | Q(only_friends=False))
 
 
 class IndexView(ListView):

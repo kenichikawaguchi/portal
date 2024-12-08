@@ -10,7 +10,13 @@ class LikeAdmin(admin.ModelAdmin):
     readonly_fields = ['created_at']
 
 
-admin.site.register(BlogPost, MarkdownxModelAdmin)
+class BlogPostAdmin(MarkdownxModelAdmin):
+    list_display = ['user', 'title', 'is_public', 'only_friends', 'created_at']
+    readonly_fields = ['created_at']
+
+
+# admin.site.register(BlogPost, MarkdownxModelAdmin)
+admin.site.register(BlogPost, BlogPostAdmin)
 admin.site.register(Comment, MarkdownxModelAdmin)
 admin.site.register(Tag)
 admin.site.register(Like, LikeAdmin)

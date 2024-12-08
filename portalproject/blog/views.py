@@ -1,12 +1,12 @@
 from django.conf import settings
 from django.views.generic import ListView, DetailView, CreateView, TemplateView
 from .models import BlogPost, Comment, Like
-from accounts.models import Connection
+from accounts.models import CustomUser, Connection
 
 from django.views.generic import FormView, DeleteView, UpdateView
 from django.urls import reverse_lazy, reverse
 
-from .forms import ContactForm, BlogPostForm, CommentCreateForm
+from .forms import ContactForm, BlogPostForm, CommentCreateForm, SearchForm
 from django.contrib import messages
 from django.core.mail import EmailMessage
 
@@ -48,6 +48,121 @@ class IndexView(ListView):
             queryset = BlogPost.with_state(self.request.user.id).prefetch_related('comments').filter(Q_open()).order_by('-created_at')
 
         return queryset
+
+
+class CustomView(ListView):
+    template_name = "index.html"
+    context_object_name = 'orderby_records'
+    # queryset = BlogPost.objects.prefetch_related("tags").order_by('-updated_at')
+    paginate_by = settings.PAGINATE_BY
+
+    def post(self, request, *args, **kwargs):
+
+        if "reset" in request.POST:
+            form_value = [
+                None, None, None,
+            ]
+        else:
+            form_value = [
+                self.request.POST.get('author', None),
+                self.request.POST.get('title', None),
+                self.request.POST.get('content', None),
+            ]
+
+        request.session['form_value'] = form_value
+
+        self.request.GET = self.request.GET.copy()
+        self.request.GET.clear()
+
+        return self.get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        author = ''
+        title = ''
+        content = ''
+
+        if 'form_value' in self.request.session:
+            form_value = self.request.session['form_value']
+            if form_value[0]:
+                author = form_value[0]
+            else:
+                author = ''
+            if form_value[1]:
+                title = form_value[1]
+            else:
+                title = ''
+            if form_value[2]:
+                content = form_value[2]
+            else:
+                content = ''
+
+        if len(author) != 0 and author[0]:
+            context['site_subtitle'] = "auther: " + author
+
+        default_data = {
+            'author': author,
+            'title': title,
+            'content': content,
+        }
+        search_form = SearchForm(initial=default_data)
+        context['search_form'] = search_form
+        return context
+
+    def get_queryset(self, **kwargs):
+
+        author = ''
+        title = ''
+        content = ''
+
+        if 'form_value' in self.request.session:
+            form_value = self.request.session['form_value']
+            if form_value[0]:
+                author = form_value[0]
+            else:
+                author = ''
+            if form_value[1]:
+                title = form_value[1]
+            else:
+                title = ''
+            if form_value[2]:
+                content = form_value[2]
+            else:
+                content = ''
+
+        if len(author) != 0 and author[0]:
+            user = CustomUser.objects.filter(username=author)[0]
+            condition_user = Q(user=user)
+        else:
+            condition_user = None
+
+        if len(title) != 0 and title[0]:
+            condition_title = Q(title__icontains=title)
+        else:
+            condition_title = None
+
+        if len(content) != 0 and content[0]:
+            condition_content = Q(content__icontains=content)
+        else:
+            condition_content = None
+
+        if self.request.user.id:
+            queryset = BlogPost.with_state(self.request.user.id).prefetch_related('comments').filter(Q_friends(self.request.user.friends()) | Q(user = self.request.user)).order_by('-created_at')
+        else:
+            queryset = BlogPost.with_state(self.request.user.id).prefetch_related('comments').filter(Q_open()).order_by('-created_at')
+
+        if condition_user:
+            queryset = queryset.filter(condition_user)
+
+        if condition_title:
+            queryset = queryset.filter(condition_title)
+
+        if condition_content:
+            queryset = queryset.filter(condition_content)
+
+        return queryset
+
 
 class BlogDetail(DetailView):
     template_name = "detail.html"

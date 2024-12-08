@@ -80,6 +80,17 @@
         <td><button class="btn btn-link ps-1" id="check-friends" data-bs-toggle="modal" data-bs-target="#follow-list" data-user-name="{{ user.username }}">{{ friends }}</button></td>
         <td></td>
       </tr>
+      <tr>
+        <th># of posts</th>
+        <td>
+          <form method="POST" action="{% url 'blog:search' %}">
+            {% csrf_token %}
+            <input type="hidden" name="author" value={{ user.username }}>
+            <button class="btn btn-link ps-1" type="submit">{{ posts }}</button>
+          </form>
+        </td>
+        <td></td>
+      </tr>
     </tbody>
   </table>
 

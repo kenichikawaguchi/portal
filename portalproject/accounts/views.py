@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views.generic import View, DetailView
 from .models import CustomUser, Connection
+from blog.models import BlogPost
 from django.contrib import messages
 
 from .forms import UsernameChangeForm, IconChangeForm, IntroductionChangeForm
@@ -90,6 +91,7 @@ class CustomUserView(LoginRequiredMixin, View):
         context['following'] = Connection.objects.filter(follower=request.user).count()
         context['follower'] = Connection.objects.filter(following=request.user).count()
         context['friends'] = request.user.friends().count()
+        context['posts'] = BlogPost.objects.filter(user=request.user).count()
 
         return render(request, 'accounts/profile.html', context)
 
@@ -144,6 +146,7 @@ class TargetUserView(View):
         context["target_user"] = user_obj
         context['following'] = Connection.objects.filter(follower=user_obj).count()
         context['follower'] = Connection.objects.filter(following=user_obj).count()
+        context['posts'] = BlogPost.objects.filter(user=user_obj).count()
 
         if request.user.username is not target_username:
             result = Connection.objects.filter(follower__username=request.user.username).filter(following__username=target_username)
@@ -173,6 +176,7 @@ class TargetUserView(View):
 
         context['following'] = Connection.objects.filter(follower=user_obj).count()
         context['follower'] = Connection.objects.filter(following=user_obj).count()
+        context['posts'] = BlogPost.objects.filter(user=user_obj).count()
 
         if request.user.username is not target_username:
             result = Connection.objects.filter(follower__username=request.user.username).filter(following__username=target_username)

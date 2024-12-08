@@ -42,6 +42,7 @@ class BlogPostForm(forms.ModelForm):
         self.fields['photo2'].widget.attrs['class'] = 'form-control'
         self.fields['photo3'].widget.attrs['class'] = 'form-control'
 
+
 class CommentCreateForm(forms.ModelForm):
     class Meta:
         model = Comment
@@ -51,3 +52,25 @@ class CommentCreateForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         for field in self.fields.values():
             field.widget.attrs['class'] = 'form-control'
+
+
+class SearchForm(forms.Form):
+
+    author = forms.CharField(
+        initial='',
+        label='Author',
+        required=False,
+    )
+
+    title = forms.CharField(
+        initial='',
+        label='Title',
+        required=False,
+    )
+
+    content = forms.CharField(
+        initial='',
+        label='Content',
+        required=False,
+    )
+

@@ -132,8 +132,11 @@ class CustomView(ListView):
                 content = ''
 
         if len(author) != 0 and author[0]:
-            user = CustomUser.objects.filter(username=author)[0]
-            condition_user = Q(user=user)
+            if CustomUser.objects.filter(username=author).count()==0:
+                condition_user = Q(user=None)
+            else:
+                user = CustomUser.objects.filter(username=author)[0]
+                condition_user = Q(user=user)
         else:
             condition_user = None
 

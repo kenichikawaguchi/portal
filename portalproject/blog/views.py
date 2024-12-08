@@ -83,6 +83,7 @@ class CustomView(ListView):
         author = ''
         title = ''
         content = ''
+        friends_post = False
 
         if 'form_value' in self.request.session:
             form_value = self.request.session['form_value']
@@ -121,6 +122,7 @@ class CustomView(ListView):
         author = ''
         title = ''
         content = ''
+        friends_post = False
 
         if 'form_value' in self.request.session:
             form_value = self.request.session['form_value']
@@ -175,7 +177,8 @@ class CustomView(ListView):
             queryset = queryset.filter(condition_content)
 
         if friends_post:
-            queryset = queryset.filter(Q(user__in=self.request.user.friends()))
+            if self.request.user.id:
+                queryset = queryset.filter(Q(user__in=self.request.user.friends()))
 
         return queryset
 

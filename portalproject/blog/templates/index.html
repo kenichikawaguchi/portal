@@ -23,12 +23,22 @@
           <table class="table caption-top">
             <caption>Search Terms</caption>
             <tbody>
-            {% for field in search_form %}
               <tr>
-                <th>{{ field.label }}:</th>
-                <td>{{ field }}</td>
+                <th>{{ search_form.author.label }}:</th>
+                <td>{{ search_form.author }}</td>
               </tr>
-            {% endfor %}
+              <tr>
+                <th>{{ search_form.title.label }}:</th>
+                <td>{{ search_form.title }}</td>
+              </tr>
+              <tr>
+                <th>{{ search_form.content.label }}:</th>
+                <td>{{ search_form.content }}</td>
+              </tr>
+              <tr>
+                <th>{{ search_form.friends_post.label }}:</th>
+                <td>{{ search_form.friends_post }}</td>
+              </tr>
             </tbody>
           </table>
           <input class="btn btn-danger" type="submit" id="reset" name="reset" value="reset">

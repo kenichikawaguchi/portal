@@ -86,19 +86,19 @@ class CustomView(ListView):
 
         if 'form_value' in self.request.session:
             form_value = self.request.session['form_value']
-            if form_value[0]:
+            if (len(form_value) > 0) and form_value[0]:
                 author = form_value[0]
             else:
                 author = ''
-            if form_value[1]:
+            if (len(form_value) > 1) and form_value[1]:
                 title = form_value[1]
             else:
                 title = ''
-            if form_value[2]:
+            if (len(form_value) > 2) and form_value[2]:
                 content = form_value[2]
             else:
                 content = ''
-            if form_value[3]:
+            if (len(form_value) > 3) and form_value[3]:
                 friends_post = form_value[3]
             else:
                 friends_post = False
@@ -124,7 +124,6 @@ class CustomView(ListView):
 
         if 'form_value' in self.request.session:
             form_value = self.request.session['form_value']
-            print(len(form_value))
             if (len(form_value) > 0) and form_value[0]:
                 author = form_value[0]
             else:

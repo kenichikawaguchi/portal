@@ -35,10 +35,12 @@
                 <th>{{ search_form.content.label }}:</th>
                 <td>{{ search_form.content }}</td>
               </tr>
+              {% if user.is_authenticated %}
               <tr>
                 <th>{{ search_form.friends_post.label }}:</th>
                 <td>{{ search_form.friends_post }}</td>
               </tr>
+              {% endif %}
             </tbody>
           </table>
           <input class="btn btn-danger" type="submit" id="reset" name="reset" value="reset">

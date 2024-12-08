@@ -60,13 +60,14 @@ class CustomView(ListView):
 
         if "reset" in request.POST:
             form_value = [
-                None, None, None,
+                None, None, None, False,
             ]
         else:
             form_value = [
                 self.request.POST.get('author', None),
                 self.request.POST.get('title', None),
                 self.request.POST.get('content', None),
+                self.request.POST.get('friends_post', False) == "on",
             ]
 
         request.session['form_value'] = form_value
@@ -97,6 +98,10 @@ class CustomView(ListView):
                 content = form_value[2]
             else:
                 content = ''
+            if form_value[3]:
+                friends_post = form_value[3]
+            else:
+                friends_post = False
 
         if len(author) != 0 and author[0]:
             context['site_subtitle'] = "auther: " + author
@@ -105,6 +110,7 @@ class CustomView(ListView):
             'author': author,
             'title': title,
             'content': content,
+            'friends_post': friends_post,
         }
         search_form = SearchForm(initial=default_data)
         context['search_form'] = search_form
@@ -130,6 +136,10 @@ class CustomView(ListView):
                 content = form_value[2]
             else:
                 content = ''
+            if form_value[3]:
+                friends_post = form_value[3]
+            else:
+                friends_post = False
 
         if len(author) != 0 and author[0]:
             if CustomUser.objects.filter(username=author).count()==0:
@@ -163,6 +173,9 @@ class CustomView(ListView):
 
         if condition_content:
             queryset = queryset.filter(condition_content)
+
+        if friends_post:
+            queryset = queryset.filter(Q(user__in=self.request.user.friends()))
 
         return queryset
 

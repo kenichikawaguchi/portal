@@ -18,16 +18,19 @@
   <div class="container px-4 px-lg-5 mb-5">
     <div class="row gx-4 gx-lg-5 justify-content-center">
       <div class="col-md-10 col-lg-8 col-xl-7">
-        <h1>Search Terms</h1>
         <form method="POST" action="{% url 'blog:search' %}">
           {% csrf_token %}
-          {% for field in search_form %}
-            <label class="col-md-offset-2 col-md-3 control-label">{{ field.label }}:</label>
-            <div class="col-md-8">
-              {{ field }}
-            </div>
-          {% endfor %}
-          <hr>
+          <table class="table caption-top">
+            <caption>Search Terms</caption>
+            <tbody>
+            {% for field in search_form %}
+              <tr>
+                <th>{{ field.label }}:</th>
+                <td>{{ field }}</td>
+              </tr>
+            {% endfor %}
+            </tbody>
+          </table>
           <input class="btn btn-danger" type="submit" id="reset" name="reset" value="reset">
           <input class="btn btn-success" type="submit" id="button" name="button" value="search">
         </form>

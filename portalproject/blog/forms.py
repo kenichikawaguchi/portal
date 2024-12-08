@@ -74,3 +74,15 @@ class SearchForm(forms.Form):
         required=False,
     )
 
+    friends_post = forms.BooleanField(
+        initial=False,
+        label="Friends' Posts",
+        required=False,
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['author'].widget.attrs['class'] = 'form-control'
+        self.fields['title'].widget.attrs['class'] = 'form-control'
+        self.fields['content'].widget.attrs['class'] = 'form-control'
+        self.fields['friends_post'].widget.attrs['class'] = 'form-check-input'

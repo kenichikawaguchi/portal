@@ -115,7 +115,7 @@
 <article class="mb-4">
   <div class="container">
     <div class="row justify-content-center">
-      <div class="fb-share-button" data-href="https://{{ request.get_host }}/" data-layout="" data-size=""><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri|urlencode:"" }}&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">Share</a></div>
+      <div class="fb-share-button" data-href="https://{{ request.build_absolute_uri }}/" data-layout="" data-size=""><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri|urlencode:"" }}&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">Share</a></div>
     </div>
     <div class="row justify-content-center">
         {% block content %}{% endblock %}

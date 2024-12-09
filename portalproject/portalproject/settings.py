@@ -42,10 +42,7 @@ if env.get_value('SUBTITLE', default=None):
 else:
     SUBTITLE = "Enjoy the Blog!"
 
-if env.get_value('FACEBOOK', default=None):
-    FACEBOOK = env('FACEBOOK')
-else:
-    FACEBOOK = "https://facebook.com"
+FACEBOOK = env.bool('FACEBOOK', default=False)
 
 SECRET_KEY = env('SECRET_KEY')
 DB_NAME = env('DB_NAME')

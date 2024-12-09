@@ -115,7 +115,7 @@
 <article class="mb-4">
   <div class="container">
     <div class="row justify-content-center">
-      <div class="fb-share-button" data-href="https://{{ request.get_host }}/" data-layout="" data-size=""><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2F{{ request.get_host }}%2F&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">Share</a></div>
+      <div class="fb-share-button" data-href="https://{{ request.get_host }}/" data-layout="" data-size=""><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri|urlencode:"" }}&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">Share</a></div>
     </div>
     <div class="row justify-content-center">
         {% block content %}{% endblock %}
@@ -128,7 +128,7 @@
           <div class="col-md-10 col-lg-8 col-xl-7">
             <ul class="list-inline text-center">
               <li class="list-inline-item">
-                <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri|urlencode }}&amp;src=sdkpreparse">
+                <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri|urlencode:"" }}&amp;src=sdkpreparse">
                   <span class="fa-stack fa-lg">
                     <i class="fas fa-circle fa-stack-2x"></i>
                     <i class="fab fa-facebook-f fa-stack-1x fa-inverse"></i>

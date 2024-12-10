@@ -115,17 +115,18 @@
 <article class="mb-4">
   <div class="container">
     <div class="row justify-content-center">
-    {% if facebook %}
       <section>
         <div class="container px-4 px-lg-5 mb-5">
           <div class="row gx-4 gx-lg-5 justify-content-center">
             <div class="col-md-10 col-lg-8 col-xl-7">
-              <div class="fb-share-button" data-href="{{ request.build_absolute_uri }}" data-layout="button_count" data-size="large"></div>
+              <a href="https://www.addtoany.com/ext/wechat/share/#url={{ request.build_absolute_uri|urlencode:'' }}"><img src="{% static 'assets/img/WeChat_logo_icon.png' %}" width="50"></a>
+            {% if facebook %}
+              <div class="fb-share-button ms-4" data-href="{{ request.build_absolute_uri }}" data-layout="button_count" data-size="large"></div>
+            {% endif %}
             </div>
           </div>
         </div>
       </section>
-    {% endif %}
     </div>
     <div class="row justify-content-center">
         {% block content %}{% endblock %}
@@ -137,14 +138,16 @@
         <div class="row gx-4 gx-lg-5 justify-content-center">
           <div class="col-md-10 col-lg-8 col-xl-7">
             <ul class="list-inline text-center">
+            {% if facebook %}
               <li class="list-inline-item">
-                <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri|urlencode:"" }}&amp;src=sdkpreparse">
+                <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri|urlencode:'' }}&amp;src=sdkpreparse">
                   <span class="fa-stack fa-lg">
                     <i class="fas fa-circle fa-stack-2x"></i>
                     <i class="fab fa-facebook-f fa-stack-1x fa-inverse"></i>
                   </span>
                 </a>
               </li>
+            {% endif %}
               <li class="list-inline-item">
                 <a href="https://github.com">
                   <span class="fa-stack fa-lg">

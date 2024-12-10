@@ -119,7 +119,6 @@
         <div class="container px-4 px-lg-5 mb-5">
           <div class="row gx-4 gx-lg-5 justify-content-center">
             <div class="col-md-10 col-lg-8 col-xl-7">
-              <a href="https://www.addtoany.com/ext/wechat/share/#url={{ request.build_absolute_uri|urlencode:'' }}"><img src="{% static 'assets/img/WeChat_logo_icon.png' %}" width="50"></a>
             {% if facebook %}
               <div class="fb-share-button ms-4" data-href="{{ request.build_absolute_uri }}" data-layout="button_count" data-size="large"></div>
             {% endif %}

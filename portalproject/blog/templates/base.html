@@ -120,7 +120,9 @@
           <div class="row gx-4 gx-lg-5 justify-content-center">
             <div class="col-md-10 col-lg-8 col-xl-7">
             {% if facebook %}
-              <div class="fb-share-button" data-href="{{ request.build_absolute_uri }}" data-layout="button_count" data-size="large"></div>
+              <a class="fb-share-button" href="{{ request.build_absolute_uri }}" data-layout="button_count" data-size="large"></a>
+              <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-size="large" data-show-count="false">Tweet</a>
+              <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
             {% endif %}
             </div>
           </div>

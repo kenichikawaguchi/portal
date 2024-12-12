@@ -146,10 +146,10 @@ class CustomView(ListView):
                     friends_post = False
 
         if len(author) != 0 and author[0]:
-            if CustomUser.objects.filter(username__contains=author).count()==0:
+            if CustomUser.objects.filter(username__icontains=author).count()==0:
                 condition_user = Q(user=None)
             else:
-                users = CustomUser.objects.filter(username__contains=author)
+                users = CustomUser.objects.filter(username__icontains=author)
                 condition_user = Q(user__in=users)
         else:
             condition_user = None

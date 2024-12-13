@@ -56,6 +56,13 @@ HOST_LIST = env.get_value("HOSTS", list)
 
 ALLOWED_HOSTS = HOST_LIST
 
+if len(HOST_LIST) > 0:
+    CSRF_TRUSTED_ORIGINS = []
+    for item in HOST_LIST:
+        site = "https://" + item
+        if "localhost" not in item:
+            CSRF_TRUSTED_ORIGINS.append(site)
+
 
 # Application definition
 

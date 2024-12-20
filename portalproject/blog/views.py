@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.views.generic import ListView, DetailView, CreateView, TemplateView
-from .models import BlogPost, Comment, Like
+from .models import BlogPost, Comment, Like, Category
 from accounts.models import CustomUser, Connection
 
 from django.views.generic import FormView, DeleteView, UpdateView
@@ -60,7 +60,7 @@ class CustomView(ListView):
 
         if "reset" in request.POST:
             form_value = [
-                None, None, None, False,
+                None, None, None, False, None,
             ]
         else:
             form_value = [
@@ -68,6 +68,7 @@ class CustomView(ListView):
                 self.request.POST.get('title', None),
                 self.request.POST.get('content', None),
                 self.request.POST.get('friends_post', False) == "on",
+                self.request.POST.get('category', None),
             ]
 
         request.session['form_value'] = form_value
@@ -84,6 +85,7 @@ class CustomView(ListView):
         title = ''
         content = ''
         friends_post = False
+        category = 0
 
         if 'form_value' in self.request.session:
             form_value = self.request.session['form_value']
@@ -104,6 +106,10 @@ class CustomView(ListView):
                     friends_post = form_value[3]
                 else:
                     friends_post = False
+                if (len(form_value) > 4) and form_value[4]:
+                    category = form_value[4]
+                else:
+                    category = 0
 
         if len(author) != 0 and author[0]:
             context['site_subtitle'] = "auther: " + author
@@ -113,9 +119,11 @@ class CustomView(ListView):
             'title': title,
             'content': content,
             'friends_post': friends_post,
+            'category': category,
         }
         search_form = SearchForm(initial=default_data)
         context['search_form'] = search_form
+        context['category'] = int(category)
         return context
 
     def get_queryset(self, **kwargs):
@@ -123,6 +131,7 @@ class CustomView(ListView):
         author = ''
         title = ''
         content = ''
+        category= 0
         friends_post = False
 
         if 'form_value' in self.request.session:
@@ -144,6 +153,10 @@ class CustomView(ListView):
                     friends_post = form_value[3]
                 else:
                     friends_post = False
+                if (len(form_value) > 4) and form_value[4]:
+                    category = form_value[4]
+                else:
+                    category = 0
 
         if len(author) != 0 and author[0]:
             if CustomUser.objects.filter(username__icontains=author).count()==0:
@@ -158,6 +171,11 @@ class CustomView(ListView):
             condition_title = Q(title__icontains=title)
         else:
             condition_title = None
+
+        if (type(category) is str) and len(category) != 0 and category[0]:
+            condition_category = Q(category=category)
+        else:
+            condition_category = None
 
         if len(content) != 0 and content[0]:
             condition_content = Q(content__icontains=content)
@@ -174,6 +192,9 @@ class CustomView(ListView):
 
         if condition_title:
             queryset = queryset.filter(condition_title)
+
+        if condition_category:
+            queryset = queryset.filter(condition_category)
 
         if condition_content:
             queryset = queryset.filter(condition_content)
@@ -294,10 +315,23 @@ class CreateBlogPostView(CreateView):
     form_class = BlogPostForm
     template_name = "post.html"
 
+    def get_form_kwargs(self, *args, **kwargs):
+        kwgs = super().get_form_kwargs(*args, **kwargs)
+        print("kwgs")
+        kwgs["initial"]["category"] = Category.objects.filter(owner=self.request.user)
+        print(kwgs)
+        # kwgs["user"] = self.requst.user
+        return kwgs
+
     def form_valid(self, form):
         postdata = form.save(commit=False)
         postdata.user = self.request.user
         postdata.save()
+        if 'form_value' in self.request.session:
+            form_value = self.request.session['form_value']
+            if form_value:
+                if (len(form_value) > 4) and form_value[4]:
+                    self.request.session['form_value'][4] = postdata.category
 
         return super().form_valid(form)
 
@@ -320,6 +354,11 @@ class UpdateBlogPostView(UpdateView):
     model = BlogPost
     form_class = BlogPostForm
     template_name = "update.html"
+
+    def get_form_kwargs(self, *args, **kwargs):
+        kwgs = super().get_form_kwargs(*args, **kwargs)
+        kwgs["initial"]["category"] = Category.objects.filter(owner=self.request.user)
+        return kwgs
 
     def form_valid(self, form):
         postdata = form.save(commit=False)

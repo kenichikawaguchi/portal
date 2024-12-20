@@ -40,6 +40,21 @@
                 <td>{{ search_form.title }}</td>
               </tr>
               <tr>
+                <th>{{ search_form.category.label }}:</th>
+                <td>
+                  <select name="category">
+                    <option value="">   </option>
+                  {% for item in search_form.fields.category.choices %}
+                    {% if item.id == category %}
+                      <option value={{ item.id }} selected>{{ item.name }}</option>
+                    {% else %}
+                      <option value={{ item.id }}>{{ item.name }}</option>
+                    {% endif %}
+                  {% endfor %}
+                  </select>
+                </td>
+              </tr>
+              <tr>
                 <th>{{ search_form.content.label }}:</th>
                 <td>{{ search_form.content }}</td>
               </tr>
@@ -71,6 +86,13 @@
             <a href="#" id="{{ record.pk }}" >
               <h2 class="post-title">
               <a href="{% url 'blog:blog_detail' record.pk %}">{{ record.title }}</a></h2>
+              {% if record.category %}
+              <div class="row">
+                <div class="col-3">Category</div>
+                <div class="col-9"> {{ record.category.name }} </div>
+              </div>
+              <hr>
+              {% endif %}
               <h3 class="post-subtitle">
                 <span style="font-size : 14pt">
                   {{ record.get_text_markdownx|safe }}

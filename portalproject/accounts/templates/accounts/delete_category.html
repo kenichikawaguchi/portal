@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}{{ site_title }} | delete category{% endblock %}
+
+{% block header %}
+  <span class="subheading">
+    <h1>Delete category: "{{ object.name }}"</h1>
+  </span>
+{% endblock %}
+
+{% block content %}
+  {% if user == object.owner %}
+    {% if status %}
+      <form method="POST">
+        {% csrf_token %}
+        <p>Are you sure to delete the category: {{ object.name }}?</p>
+        <button class="btn btn-danger my-2" type="submit">Delete</button>
+        <a class="btn btn-secondary my-2" href="{% url 'accounts:categories' %}">Cancel</a>
+      </form>
+    {% else %}
+      <p>You cannot delete this category because it has the following post(s).</p>
+      {% for post in posts %}
+        <a href="{% url 'blog:blog_detail' post.pk %}">{{ post.title }}</a>
+      {% endfor %}
+    {% endif %}
+
+  {% else %}
+    <p>You have no right to delete this category. This is not your category.</p>
+  {% endif %}
+{% endblock %}

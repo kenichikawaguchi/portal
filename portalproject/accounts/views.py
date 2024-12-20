@@ -1,10 +1,12 @@
 from django.shortcuts import render, redirect
-from django.views.generic import View, DetailView
+from django.views.generic import View, DetailView, DeleteView
 from .models import CustomUser, Connection
-from blog.models import BlogPost
+from blog.models import BlogPost, Category
 from django.contrib import messages
 
-from .forms import UsernameChangeForm, IconChangeForm, IntroductionChangeForm
+from django.utils.decorators import method_decorator
+
+from .forms import UsernameChangeForm, IconChangeForm, IntroductionChangeForm, CategoryChangeForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy, reverse
 from django.http import HttpResponseRedirect, Http404
@@ -92,6 +94,7 @@ class CustomUserView(LoginRequiredMixin, View):
         context['follower'] = Connection.objects.filter(following=request.user).count()
         context['friends'] = request.user.friends().count()
         context['posts'] = BlogPost.objects.filter(user=request.user).count()
+        context['categories'] = Category.objects.filter(owner=request.user).count()
 
         return render(request, 'accounts/profile.html', context)
 
@@ -265,6 +268,8 @@ class FollowPopupView(DetailView):
 
     def post(self, request, *args, **kwargs):
         return_value = None
+        print("kwargs")
+        print(kwargs)
         try:
             results = []
             if kwargs['follow'] == 'followings':
@@ -280,7 +285,7 @@ class FollowPopupView(DetailView):
                         result['icon'] = ""
                     results.append(result)
 
-            elif kwargs['follow'] == 'follower':
+            elif kwargs['follow'] == 'followers':
                 follows = Connection.objects.filter(following__username=kwargs['username']).order_by('-created_at')
                 for follow in follows:
                     result = {}
@@ -293,7 +298,7 @@ class FollowPopupView(DetailView):
                         result['icon'] = ""
                     results.append(result)
 
-            else:
+            elif kwargs['follow'] == 'friends':
                 me = CustomUser.objects.filter(username=kwargs['username'])[0]
                 friends = me.friends()
                 for friend in friends:
@@ -307,9 +312,143 @@ class FollowPopupView(DetailView):
                         result['icon'] = ""
                     results.append(result)
 
+            else:
+                me = CustomUser.objects.filter(username=kwargs['username'])[0]
+                categories = Category.objects.filter(owner=me)
+                print(categories)
+                for category in categories:
+                    result = {}
+                    result['type'] = "category"
+                    result['id'] = category.id
+                    result['name'] = category.name
+                    results.append(result)
+
             return_value = json.dumps(results, default=str)
 
         except Connection.DoesNotExist:
             pass
 
         return HttpResponse(return_value, status=200)
+
+
+class CategoriesView(LoginRequiredMixin, View):
+    template_name = "categories.html"
+    model = Category
+
+    def get(self, request, *args, **kwargs):
+        context = {}
+        context["user"] = request.user
+        context['categories'] = Category.objects.filter(owner=request.user)
+        if 'return_url' in request.session:
+            context["return_url"] = request.session["return_url"]
+        else:
+            if 'HTTP_REFERER' in request.META:
+                request.session["return_url"] = request.META['HTTP_REFERER']
+            else:
+                request.session["return_url"] = "blog:index"
+            context["return_url"] = request.session["return_url"]
+
+        return render(request, 'accounts/categories.html', context)
+
+
+class CategoryUpdateView(LoginRequiredMixin, View):
+    template_name = "update_category.html"
+    form_class = CategoryChangeForm
+
+    def get_form_kwargs(self):
+        kwargs = super(CategoryUpdateView, self).get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+
+    def get(self, request, *args, **kwargs):
+        context = {}
+        context["user"] = request.user
+        # form = CategoryChangeForm()
+        context["form"] = self.form_class
+        context["current_category"] = Category.objects.filter(id=self.kwargs['pk'])[0].name
+        return render(request, 'accounts/update_category.html', context)
+
+    def post(self, request, *args, **kwargs):
+        context = {}
+        context["user"] = request.user
+        form = CategoryChangeForm(request.POST)
+
+        if form.is_valid():
+            name = form.cleaned_data["name"]
+            user = form.cleaned_data["owner"]
+            user = CustomUser.objects.get(username=user)
+
+            category_obj = Category.objects.get(id=self.kwargs['pk'])
+            category_obj.name = name
+            category_obj.save()
+            messages.info(request,"Category name has changed")
+
+            return redirect('accounts:profile')
+        else:
+            context["current_category"] = Category.objects.filter(id=self.kwargs['pk'])[0].name
+            context["form"] = form
+
+            return render(request, 'accounts/update_category.html', context)
+
+
+
+class CategoryCreateView(LoginRequiredMixin, View):
+    template_name = "create_category.html"
+    form_class = CategoryChangeForm
+
+    def get_form_kwargs(self):
+        kwargs = super(CategoryUpdateView, self).get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+
+    def get(self, request, *args, **kwargs):
+        context = {}
+        context["user"] = request.user
+        # form = CategoryChangeForm()
+        context["form"] = self.form_class
+        return render(request, 'accounts/create_category.html', context)
+
+    def post(self, request, *args, **kwargs):
+        context = {}
+        context["user"] = request.user
+        print(request.POST)
+        form = CategoryChangeForm(request.POST)
+        print(form)
+
+        if form.is_valid():
+            name = form.cleaned_data["name"]
+            user = form.cleaned_data["owner"]
+            user = CustomUser.objects.get(username=user)
+
+            category_obj = form.save(commit=False)
+            category_obj.owner = user
+            category_obj.save()
+            messages.info(request,"Category has created")
+
+            return redirect('accounts:profile')
+        else:
+            context["form"] = form
+
+            return render(request, 'accounts/create_category.html', context)
+
+
+@method_decorator(login_required,name='dispatch')
+class CategoryDeleteView(DeleteView):
+    model = Category
+    template_name = "accounts/delete_category.html"
+    success_url = reverse_lazy('accounts:categories')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        posts = BlogPost.objects.filter(user=self.request.user, category=context['category'])
+        context.update({"posts": posts})
+        if len(posts) > 0:
+            status = {"status": False}
+        else:
+            status = {"status": True}
+        context.update(status)
+        print(context)
+        return context
+
+    def delete(self, request, *args, **kwargs):
+        return super().delete(request, *args, **kwargs)

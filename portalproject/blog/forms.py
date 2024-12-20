@@ -1,5 +1,5 @@
 from django import forms
-from .models import BlogPost, Comment
+from .models import BlogPost, Comment, Category
 
 
 class ContactForm(forms.Form):
@@ -30,11 +30,25 @@ class ContactForm(forms.Form):
 class BlogPostForm(forms.ModelForm):
     class Meta:
         model = BlogPost
-        fields = ["title", "content", "is_public", "only_friends", "photo", "photo2", "photo3"]
+        fields = ["title", "category", "content", "is_public", "only_friends", "photo", "photo2", "photo3"]
 
     def __init__(self, *args, **kwargs):
+        tmp = kwargs.get('initial')['category']
+        print(kwargs.get('instance'))
+        if kwargs.get('instance') is not None:
+            selected_category = kwargs.get('instance').category
+        else:
+            selected_category = None
+        print("selected_category is " + str(selected_category))
         super().__init__(*args, **kwargs)
+        choices = []
+        choices.append((None, ""))
+        for i in tmp:
+            choices.append((i.id, i.name))
+        self.fields['category'].choices = choices
+        self.initial['category'] = selected_category
         self.fields['title'].widget.attrs['class'] = 'form-control'
+        self.fields['category'].widget.attrs['class'] = 'form-control'
         self.fields['content'].widget.attrs['class'] = 'form-control'
         self.fields['is_public'].widget.attrs['class'] = 'form-check-input'
         self.fields['only_friends'].widget.attrs['class'] = 'form-check-input'
@@ -68,6 +82,14 @@ class SearchForm(forms.Form):
         required=False,
     )
 
+    category = forms.ChoiceField(
+        initial='',
+        label='Category',
+        required=False,
+        choices=Category.objects.all().values(),
+        widget=forms.widgets.Select
+    )
+
     content = forms.CharField(
         initial='',
         label='Content',
@@ -84,5 +106,6 @@ class SearchForm(forms.Form):
         super().__init__(*args, **kwargs)
         self.fields['author'].widget.attrs['class'] = 'form-control'
         self.fields['title'].widget.attrs['class'] = 'form-control'
+        self.fields['category'].widget.attrs['class'] = 'form-control'
         self.fields['content'].widget.attrs['class'] = 'form-control'
         self.fields['friends_post'].widget.attrs['class'] = 'form-check-input'

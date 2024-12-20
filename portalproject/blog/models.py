@@ -81,9 +81,26 @@ def rename_image(instance, filename):
     return filename
 
 
+class Category(models.Model):
+    owner = models.ForeignKey(CustomUser, verbose_name="Owner", on_delete=models.PROTECT)
+    name = models.CharField('Category', max_length=50)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["owner", "name"],
+                name="category_unique"
+            )
+        ]
+
+    def __str__(self):
+        return f'{self.owner} {self.name}'
+
+
 class BlogPost(models.Model):
     user = models.ForeignKey(CustomUser, verbose_name="Author", on_delete=models.PROTECT)
     title = models.CharField(verbose_name="Title", max_length=200)
+    category = models.ForeignKey(Category, verbose_name="Category", null=True, blank=True, on_delete=models.PROTECT)
     # content = models.TextField(verbose_name="Content")
     content = MarkdownxField(verbose_name="Content")
     is_public = models.BooleanField('public content?', default=True)
@@ -110,6 +127,9 @@ class BlogPost(models.Model):
             )
         )
 
+    def my_categories(self, user_id):
+        return Category.objects.filter(owner_id=user_id).values('category_id')
+
     def get_text_markdownx(self):
         return mark_safe(markdownify(self.content))
 
@@ -131,6 +151,9 @@ class BlogPost(models.Model):
     @delete_previous_file
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         super(BlogPost, self).save()
+
+    def is_correct_category(self):
+        return self.user == self.category.owner
 
 
 class Comment(models.Model):

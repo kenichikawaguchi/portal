@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}{{ site_title }} | User's Categories{% endblock %}
+
+{% block header %}
+  <h1>User's Categories</h1>
+  <span class="subheading">{{ user.username }}'s categories.</span>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col d-flex justify-content-start">
+    <a href="{% url 'accounts:create_category' %}"
+        class="btn btn-primary my-2 mx-2">Create New Category</a>
+  </div>
+</div>
+
+<div class="row">
+  <table class="table">
+    <tbody>
+      {% for category in categories %}
+      <tr>
+        <td>
+          <form method="POST" action="{% url 'blog:search' %}">
+            {% csrf_token %}
+            <input type="hidden" name="author" value="{{ user.username }}">
+            <input type="hidden" name="category" value="{{ category.id }}">
+            <button class="btn btn-link ps-1" type="submit">{{ category.name }}</button>
+          </form>
+        </td>
+        <td>
+          <div class="col d-flex justify-content-start">
+            <a href="{% url 'accounts:update_category' category.id %}"
+                class="btn btn-primary my-2 mx-2">Update</a>
+          </div>
+        </td>
+        <td>
+          <div class="col d-flex justify-content-start">
+            <a href="{% url 'accounts:delete_category' category.id %}"
+                class="btn btn-danger my-2 mx-2">Delete</a>
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <div class="d-flex justify-content-center">
+  {% if return_url %}
+  <a href="{{ return_url }}">Back</a>
+  {% else %}
+  <a href="{% url 'blog:index' %}">Back</a>
+  {% endif %}
+  </div>
+</div>
+{% endblock %}

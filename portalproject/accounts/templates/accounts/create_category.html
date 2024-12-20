@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}{{ site_title }} | Create Category{% endblock %}
+
+{% block header %}
+  <h1>Create Category</h1>
+  <span class="subheading">Create Category.</span>
+{% endblock %}
+
+{% block content %}
+{% for key, errors in form.errors.items %}
+<ul class="alert alert-danger list-unstyled">{% for error in errors %}
+    <li>{{ error }}</li>
+{% endfor %}
+</ul>
+{% endfor %}
+
+<div class="row">
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <table class="table">
+      <tbody>
+        <tr>
+          <th>{{ form.name.label }}</th>
+          <td>{{ form.name }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <input type="hidden" name="owner" value="{{ user.id }}">
+    <div class="form-group text-right" style="padding:20px 0">
+      <input type="submit" value="Submit" class="btn btn-primary" />
+    </div>
+  </form>
+</div>
+
+  <hr>
+
+{% endblock %}

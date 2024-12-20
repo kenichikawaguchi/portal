@@ -91,6 +91,16 @@
         </td>
         <td></td>
       </tr>
+      <tr>
+        <th># of categories</th>
+        <td><button class="btn btn-link ps-1" id="check-categories" data-bs-toggle="modal" data-bs-target="#follow-list" data-user-name="{{ user.username }}">{{ categories }}</button></td>
+        <td>
+          <div class="col d-flex justify-content-start">
+            <a href="{% url 'accounts:categories' %}"
+                class="btn btn-primary my-2 mx-2">Update</a>
+          </div>
+        </td>
+      </tr>
     </tbody>
   </table>
 
@@ -141,6 +151,15 @@
         const follow_list = document.getElementById("follow-list");
         const follow_list_titles = follow_list.getElementsByClassName("modal-title");
         follow_list_titles[0].innerHTML = "{{ user.username }}'s friends";
+      });
+
+      const categoriesCheck = document.getElementById('check-categories');
+      categoriesCheck.addEventListener('click', () => {
+        const userName = categoriesCheck.dataset.userName;
+        fetchUrlShowModal(`{% url 'blog:index' %}accounts/profile/follow/popup/categories/${userName}/`, 'showfollows');
+        const follow_list = document.getElementById("follow-list");
+        const follow_list_titles = follow_list.getElementsByClassName("modal-title");
+        follow_list_titles[0].innerHTML = "{{ user.username }}'s categories";
       });
 </script>
 {% endblock %}

@@ -15,4 +15,8 @@ urlpatterns = [
     path('follow/<slug:username>/', views.follow_view, name='follow'),
     path('unfollow/<slug:username>/', views.unfollow_view, name='unfollow'),
     path('follow/popup/<slug:follow>/<slug:username>/', views.FollowPopupView.as_view(), name='follow_popup'),
+    path('categories/', views.CategoriesView.as_view(), name="categories"),
+    path('create_category/', views.CategoryCreateView.as_view(), name="create_category"),
+    path('update_category/<int:pk>/', views.CategoryUpdateView.as_view(), name="update_category"),
+    path('delete_category/<int:pk>/', views.CategoryDeleteView.as_view(), name="delete_category"),
 ]

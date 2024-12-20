@@ -222,31 +222,44 @@
       }
 
       function showModal(users, showModalId) {
-        const target = document.getElementById(showModalId)
+        const target = document.getElementById(showModalId);
         target.innerHTML = "";
         for (user of users){
           // target.innerHTML += `<p>`;
-          if(user['icon'] != ""){
-            target.innerHTML += `<a href="{% url 'accounts:target_user' %}${user['username']}"><img src="${user['icon']}" class="rounded-circle" width="50"> ${user['username']}</a> `;
-          } else {
-            target.innerHTML += `<a href="{% url 'accounts:target_user' %}${user['username']}">${user['username']}</a> `;
+          if('type' in user){
+            // target.innerHTML += `<a>${user['name']}</a><br>`;
+            target.innerHTML += `
+              <form method="POST" action="{% url 'blog:search' %}">
+                {% csrf_token %}
+                <input type="hidden" name="author" value={{ user.username }}>
+                <input type="hidden" name="category" value="${user['id']}">
+                <button class="btn btn-link ps-1" type="submit">${user['name']}</button>
+              </form>
+            `;
           }
-          // const created_at_tz = new Date(user['created_at']).toString()
-          // target.innerHTML += `at ${user['created_at']}</p>`;
-          const created_at_tz = new Date(user['created_at']);
-          const year = created_at_tz.getFullYear();
-          const month = created_at_tz.getMonth() + 1;
-          const date = created_at_tz.getDate();
-          const hour = formatTime(created_at_tz.getHours());
-          const minute = formatTime(created_at_tz.getMinutes());
-          const second = formatTime(created_at_tz.getSeconds());
-          const localetime = created_at_tz.toLocaleString();
-          function formatTime(val) {
-            return ("0" + val).slice(-2);
+          else{
+            if(user['icon'] != ""){
+              target.innerHTML += `<a href="{% url 'accounts:target_user' %}${user['username']}"><img src="${user['icon']}" class="rounded-circle" width="50"> ${user['username']}</a> `;
+            } else {
+              target.innerHTML += `<a href="{% url 'accounts:target_user' %}${user['username']}">${user['username']}</a> `;
+            }
+            // const created_at_tz = new Date(user['created_at']).toString()
+            // target.innerHTML += `at ${user['created_at']}</p>`;
+            const created_at_tz = new Date(user['created_at']);
+            const year = created_at_tz.getFullYear();
+            const month = created_at_tz.getMonth() + 1;
+            const date = created_at_tz.getDate();
+            const hour = formatTime(created_at_tz.getHours());
+            const minute = formatTime(created_at_tz.getMinutes());
+            const second = formatTime(created_at_tz.getSeconds());
+            const localetime = created_at_tz.toLocaleString();
+            function formatTime(val) {
+              return ("0" + val).slice(-2);
+            }
+            // target.innerHTML += `at ${year}-${month}-${date} ${hour}:${minute}:${second} ${tzoffset}</p>`;
+            // target.innerHTML += `at ${localetime}</p>`;
+            target.innerHTML += `at ${localetime}</br>`;
           }
-          // target.innerHTML += `at ${year}-${month}-${date} ${hour}:${minute}:${second} ${tzoffset}</p>`;
-          // target.innerHTML += `at ${localetime}</p>`;
-          target.innerHTML += `at ${localetime}</br>`;
         }
       }
 

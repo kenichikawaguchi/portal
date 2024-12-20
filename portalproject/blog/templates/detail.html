@@ -28,6 +28,11 @@
     </div>
   {% endif %}
   <div class="row mb-2">
+    <div class="col-3">Category</div>
+    <div class="col-9">{{ object.category.name }}</div>
+  </div>
+  <hr>
+  <div class="row mb-2">
     <div class="markdownx">
     {{ object.get_text_markdownx|safe }}
     </div>

@@ -27,48 +27,64 @@
             </h2>
             <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
               <div class="accordion-body">
-        <form method="POST" action="{% url 'blog:search' %}">
-          {% csrf_token %}
-          <table class="table caption-top">
-            <tbody>
-              <tr>
-                <th>{{ search_form.author.label }}:</th>
-                <td>{{ search_form.author }}</td>
-              </tr>
-              <tr>
-                <th>{{ search_form.title.label }}:</th>
-                <td>{{ search_form.title }}</td>
-              </tr>
-              <tr>
-                <th>{{ search_form.category.label }}:</th>
-                <td>
-                  <select name="category">
-                    <option value="">   </option>
-                  {% for item in search_form.fields.category.choices %}
-                    {% if item.id == category %}
-                      <option value={{ item.id }} selected>{{ item.name }}</option>
-                    {% else %}
-                      <option value={{ item.id }}>{{ item.name }}</option>
-                    {% endif %}
+                <form method="POST" action="{% url 'blog:search' %}">
+                  {% csrf_token %}
+                  <table class="table caption-top">
+                    <tbody>
+                      <tr>
+                        <th>{{ search_form.author.label }}:</th>
+                        <td>{{ search_form.author }}</td>
+                      </tr>
+                      <tr>
+                        <th>{{ search_form.title.label }}:</th>
+                        <td>{{ search_form.title }}</td>
+                      </tr>
+                      <tr>
+                        <th>{{ search_form.category.label }}:</th>
+                        <td>
+                          <select name="category">
+                            <option value="">   </option>
+                          {% for item in search_form.fields.category.choices %}
+                            {% if item.id == category %}
+                              <option value={{ item.id }} selected>{{ item.name }}</option>
+                            {% else %}
+                              <option value={{ item.id }}>{{ item.name }}</option>
+                            {% endif %}
+                          {% endfor %}
+                          </select>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>{{ search_form.content.label }}:</th>
+                        <td>{{ search_form.content }}</td>
+                      </tr>
+                      {% if user.is_authenticated %}
+                      <tr>
+                        <th>{{ search_form.friends_post.label }}:</th>
+                        <td>{{ search_form.friends_post }}</td>
+                      </tr>
+                      {% endif %}
+                      <tr>
+                        <th>{{ search_form.posted_from.label }}:</th>
+                        <td>{{ search_form.posted_from }}</td>
+                      </tr>
+                      <tr>
+                        <th>{{ search_form.posted_to.label }}:</th>
+                        <td>{{ search_form.posted_to }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <input class="btn btn-danger" type="submit" id="reset" name="reset" value="reset">
+                  <input class="btn btn-success" type="submit" id="button" name="button" value="search">
+                </form>
+                {% if form.errors.posted_from %}
+                  {% for error in form.errors.posted_from %}
+                    <div>{{ error }}</div>
                   {% endfor %}
-                  </select>
-                </td>
-              </tr>
-              <tr>
-                <th>{{ search_form.content.label }}:</th>
-                <td>{{ search_form.content }}</td>
-              </tr>
-              {% if user.is_authenticated %}
-              <tr>
-                <th>{{ search_form.friends_post.label }}:</th>
-                <td>{{ search_form.friends_post }}</td>
-              </tr>
-              {% endif %}
-            </tbody>
-          </table>
-          <input class="btn btn-danger" type="submit" id="reset" name="reset" value="reset">
-          <input class="btn btn-success" type="submit" id="button" name="button" value="search">
-        </form>
+                  {% for error in form.errors.posted_to %}
+                    <div>{{ error }}</div>
+                  {% endfor %}
+                {% endif %}
               </div>
             </div>
           </div>

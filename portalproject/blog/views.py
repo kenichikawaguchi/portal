@@ -58,9 +58,23 @@ class CustomView(ListView):
 
     def post(self, request, *args, **kwargs):
 
+        posted_from = self.request.POST.get('posted_from', None)
+        posted_to = self.request.POST.get('posted_to', None)
+
+        try:
+            datetime.datetime.strptime(posted_from, "%Y-%m-%d")
+        except ValueError:
+            posted_from = ""
+
+        try:
+            datetime.datetime.strptime(posted_to, "%Y-%m-%d")
+        except ValueError:
+            posted_to = ""
+
+
         if "reset" in request.POST:
             form_value = [
-                None, None, None, False, None,
+                None, None, None, False, None, None, None,
             ]
         else:
             form_value = [
@@ -69,6 +83,8 @@ class CustomView(ListView):
                 self.request.POST.get('content', None),
                 self.request.POST.get('friends_post', False) == "on",
                 self.request.POST.get('category', None),
+                posted_from,
+                posted_to,
             ]
 
         request.session['form_value'] = form_value
@@ -86,6 +102,8 @@ class CustomView(ListView):
         content = ''
         friends_post = False
         category = 0
+        posted_from = ''
+        posted_to = ''
 
         if 'form_value' in self.request.session:
             form_value = self.request.session['form_value']
@@ -110,6 +128,14 @@ class CustomView(ListView):
                     category = form_value[4]
                 else:
                     category = 0
+                if (len(form_value) > 5) and form_value[5]:
+                    posted_from = form_value[5]
+                else:
+                    posted_from = ''
+                if (len(form_value) > 6) and form_value[6]:
+                    posted_to = form_value[6]
+                else:
+                    posted_to = ''
 
         if len(author) != 0 and author[0]:
             context['site_subtitle'] = "auther: " + author
@@ -120,10 +146,20 @@ class CustomView(ListView):
             'content': content,
             'friends_post': friends_post,
             'category': category,
+            'posted_from': posted_from,
+            'posted_to': posted_to,
         }
         search_form = SearchForm(initial=default_data)
         context['search_form'] = search_form
         context['category'] = int(category)
+        try:
+            context['posted_from'] = datetime.datetime.strptime(posted_from, "%Y-%m-%d")
+        except ValueError:
+            context['posted_from'] = None
+        try:
+            context['posted_to'] = datetime.datetime.strptime(posted_from, "%Y-%m-%d")
+        except ValueError:
+            context['posted_to'] = None
         return context
 
     def get_queryset(self, **kwargs):
@@ -133,6 +169,8 @@ class CustomView(ListView):
         content = ''
         category= 0
         friends_post = False
+        posted_from = ''
+        posted_to = ''
 
         if 'form_value' in self.request.session:
             form_value = self.request.session['form_value']
@@ -157,6 +195,14 @@ class CustomView(ListView):
                     category = form_value[4]
                 else:
                     category = 0
+                if (len(form_value) > 5) and form_value[5]:
+                    posted_from = datetime.datetime.strptime(form_value[5], "%Y-%m-%d")
+                else:
+                    posted_from = None
+                if (len(form_value) > 6) and form_value[6]:
+                    posted_to = datetime.datetime.strptime(form_value[6], "%Y-%m-%d") + datetime.timedelta(days=1)
+                else:
+                    posted_to = None
 
         if len(author) != 0 and author[0]:
             if CustomUser.objects.filter(username__icontains=author).count()==0:
@@ -181,6 +227,15 @@ class CustomView(ListView):
             condition_content = Q(content__icontains=content)
         else:
             condition_content = None
+
+        if posted_from and posted_to:
+            condition_posted_at = Q(created_at__range=[posted_from, posted_to])
+        elif posted_from:
+            condition_posted_at = Q(created_at__gte=posted_from)
+        elif posted_to:
+            condition_posted_at = Q(created_at__lte=posted_to)
+        else:
+            condition_posted_at = None
 
         if self.request.user.id:
             queryset = BlogPost.with_state(self.request.user.id).prefetch_related('comments').filter(Q_friends(self.request.user.friends()) | Q(user = self.request.user)).order_by('-created_at')
@@ -209,6 +264,8 @@ class CustomView(ListView):
                         if (len(form_value) > 3) and form_value[3]:
                             self.request.session['form_value'][3] = False
 
+        if condition_posted_at:
+            queryset = queryset.filter(condition_posted_at)
 
         return queryset
 

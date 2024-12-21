@@ -1,6 +1,13 @@
 from django import forms
 from .models import BlogPost, Comment, Category
+from django.core.exceptions import ValidationError
 
+
+def check_date(value):
+    try:
+        datetime.datetime.strptime(value, "%Y-%m-%d")
+    except ValueError:
+        raise ValidationError('Input Date in "yyyy-mm-dd" format.')
 
 class ContactForm(forms.Form):
     name = forms.CharField(label="Name")
@@ -102,6 +109,24 @@ class SearchForm(forms.Form):
         required=False,
     )
 
+    posted_from = forms.DateField(
+        widget=forms.DateInput(attrs={'type': 'date'}),
+        initial='',
+        label='Posted from',
+        required=False,
+        validators=[check_date],
+        input_formats=['%Y-%m-%d'],
+    )
+
+    posted_to = forms.DateField(
+        widget=forms.DateInput(attrs={'type': 'date'}),
+        initial='',
+        label='Posted to',
+        required=False,
+        validators=[check_date],
+        input_formats=['%Y-%m-%d'],
+    )
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['author'].widget.attrs['class'] = 'form-control'
@@ -109,3 +134,15 @@ class SearchForm(forms.Form):
         self.fields['category'].widget.attrs['class'] = 'form-control'
         self.fields['content'].widget.attrs['class'] = 'form-control'
         self.fields['friends_post'].widget.attrs['class'] = 'form-check-input'
+        self.fields['posted_from'].widget.attrs['class'] = 'form-control'
+        self.fields['posted_from'].widget.attrs['placeholder'] = 'yyyy-mm-dd'
+        self.fields['posted_to'].widget.attrs['class'] = 'form-control'
+        self.fields['posted_to'].widget.attrs['placeholder'] = 'yyyy-mm-dd'
+
+    def clean(self):
+        cleaned_data = super().clean()
+        posted_from = cleaned_data.get("posted_from")
+
+        if posted_from:
+            check_date(posted_from)
+

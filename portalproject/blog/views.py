@@ -58,8 +58,8 @@ class CustomView(ListView):
 
     def post(self, request, *args, **kwargs):
 
-        posted_from = self.request.POST.get('posted_from', None)
-        posted_to = self.request.POST.get('posted_to', None)
+        posted_from = self.request.POST.get('posted_from', '')
+        posted_to = self.request.POST.get('posted_to', '')
 
         try:
             datetime.datetime.strptime(posted_from, "%Y-%m-%d")

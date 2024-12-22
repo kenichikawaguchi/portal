@@ -45,10 +45,10 @@
                           <select name="category">
                             <option value="">   </option>
                           {% for item in search_form.fields.category.choices %}
-                            {% if item.id == category %}
-                              <option value={{ item.id }} selected>{{ item.name }}</option>
+                            {% if item == category %}
+                              <option value="{{ item }}" selected>{{ item }}</option>
                             {% else %}
-                              <option value={{ item.id }}>{{ item.name }}</option>
+                              <option value="{{ item }}">{{ item }}</option>
                             {% endif %}
                           {% endfor %}
                           </select>

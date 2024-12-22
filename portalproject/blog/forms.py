@@ -93,7 +93,7 @@ class SearchForm(forms.Form):
         initial='',
         label='Category',
         required=False,
-        choices=Category.objects.all().values(),
+        choices=[ i[0] for i in Category.objects.all().order_by('name').distinct().values_list('name')],
         widget=forms.widgets.Select
     )
 
@@ -128,10 +128,16 @@ class SearchForm(forms.Form):
     )
 
     def __init__(self, *args, **kwargs):
+        print(kwargs.get('instance'))
+        if kwargs.get('instance') is not None:
+            selected_category = kwargs.get('instance').category
+        else:
+            selected_category = None
         super().__init__(*args, **kwargs)
         self.fields['author'].widget.attrs['class'] = 'form-control'
         self.fields['title'].widget.attrs['class'] = 'form-control'
         self.fields['category'].widget.attrs['class'] = 'form-control'
+        self.initial['category'] = selected_category
         self.fields['content'].widget.attrs['class'] = 'form-control'
         self.fields['friends_post'].widget.attrs['class'] = 'form-check-input'
         self.fields['posted_from'].widget.attrs['class'] = 'form-control'

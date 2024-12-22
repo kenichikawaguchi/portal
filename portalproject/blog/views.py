@@ -101,7 +101,7 @@ class CustomView(ListView):
         title = ''
         content = ''
         friends_post = False
-        category = 0
+        category = ''
         posted_from = ''
         posted_to = ''
 
@@ -151,7 +151,7 @@ class CustomView(ListView):
         }
         search_form = SearchForm(initial=default_data)
         context['search_form'] = search_form
-        context['category'] = int(category)
+        context['category'] = category
         try:
             context['posted_from'] = datetime.datetime.strptime(posted_from, "%Y-%m-%d")
         except ValueError:
@@ -167,7 +167,7 @@ class CustomView(ListView):
         author = ''
         title = ''
         content = ''
-        category= 0
+        category= ''
         friends_post = False
         posted_from = ''
         posted_to = ''
@@ -194,7 +194,7 @@ class CustomView(ListView):
                 if (len(form_value) > 4) and form_value[4]:
                     category = form_value[4]
                 else:
-                    category = 0
+                    category = ''
                 if (len(form_value) > 5) and form_value[5]:
                     posted_from = datetime.datetime.strptime(form_value[5], "%Y-%m-%d")
                 else:
@@ -219,7 +219,8 @@ class CustomView(ListView):
             condition_title = None
 
         if (type(category) is str) and len(category) != 0 and category[0]:
-            condition_category = Q(category=category)
+            # category_name = Category.objects.get(id=category).name
+            condition_category = Q(category__name=category)
         else:
             condition_category = None
 
@@ -238,9 +239,9 @@ class CustomView(ListView):
             condition_posted_at = None
 
         if self.request.user.id:
-            queryset = BlogPost.with_state(self.request.user.id).prefetch_related('comments').filter(Q_friends(self.request.user.friends()) | Q(user = self.request.user)).order_by('-created_at')
+            queryset = BlogPost.with_state(self.request.user.id).select_related('category').prefetch_related('comments').filter(Q_friends(self.request.user.friends()) | Q(user = self.request.user)).order_by('-created_at')
         else:
-            queryset = BlogPost.with_state(self.request.user.id).prefetch_related('comments').filter(Q_open()).order_by('-created_at')
+            queryset = BlogPost.with_state(self.request.user.id).select_related('category').prefetch_related('comments').filter(Q_open()).order_by('-created_at')
 
         if condition_user:
             queryset = queryset.filter(condition_user)

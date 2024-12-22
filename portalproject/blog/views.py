@@ -175,6 +175,8 @@ class CustomView(ListView):
         if 'form_value' in self.request.session:
             form_value = self.request.session['form_value']
             if form_value:
+                print("form_value")
+                print(form_value)
                 if (len(form_value) > 0) and form_value[0]:
                     author = form_value[0]
                 else:

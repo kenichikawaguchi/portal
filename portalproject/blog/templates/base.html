@@ -232,7 +232,7 @@
               <form method="POST" action="{% url 'blog:search' %}">
                 {% csrf_token %}
                 <input type="hidden" name="author" value={{ user.username }}>
-                <input type="hidden" name="category" value="${user['id']}">
+                <input type="hidden" name="category" value="${user['name']}">
                 <button class="btn btn-link ps-1" type="submit">${user['name']}</button>
               </form>
             `;

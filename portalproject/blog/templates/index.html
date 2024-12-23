@@ -188,11 +188,20 @@
     </div>
   </div>
 </section>
-  {% if user.is_superuser %}
-        {% if maintenance_mode %}
-            <a href="{% url 'maintenance_mode_off' %}">End maintenance</a>
-        {% else %}
-            <a href="{% url 'maintenance_mode_on' %}">Begin maintenance</a>
-        {% endif %}
-    {% endif %}
+{% if user.is_superuser %}
+<hr>
+<section>
+  <div class="container px-4 px-lg-5">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+      <div class="col-md-10 col-lg-8 col-xl-7">
+      {% if maintenance_mode %}
+        <a class="btn btn-secondary" href="{% url 'maintenance_mode_off' %}">End maintenance</a>
+      {% else %}
+        <a class="btn btn-secondary" href="{% url 'maintenance_mode_on' %}">Begin maintenance</a>
+      {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+{% endif %}
 {% endblock %}

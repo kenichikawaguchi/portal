@@ -73,6 +73,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'maintenance_mode',
 
     'imagekit',
 
@@ -219,6 +220,8 @@ MIDDLEWARE = [
 
     'allauth.account.middleware.AccountMiddleware',
     'tz_detect.middleware.TimezoneMiddleware',
+
+    'maintenance_mode.middleware.MaintenanceModeMiddleware',
 ]
 
 ROOT_URLCONF = 'portalproject.urls'
@@ -240,6 +243,7 @@ TEMPLATES = [
 
                 'django.template.context_processors.media',
                 'blog.my_context_processor.common',
+                'maintenance_mode.context_processors.maintenance_mode',
             ],
         },
     },
@@ -401,4 +405,7 @@ if env.get_value('PAGINATE_BY', default=None):
     PAGINATE_BY = env('PAGINATE_BY')
 else:
     PAGINATE_BY = 10
+
+MAINTENANCE_MODE_IGNORE_ADMIN_SITE = True
+MAINTENANCE_MODE_IGNORE_SUPERUSER = True
 

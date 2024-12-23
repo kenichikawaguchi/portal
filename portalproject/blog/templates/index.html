@@ -188,4 +188,11 @@
     </div>
   </div>
 </section>
+  {% if user.is_superuser %}
+        {% if maintenance_mode %}
+            <a href="{% url 'maintenance_mode_off' %}">End maintenance</a>
+        {% else %}
+            <a href="{% url 'maintenance_mode_on' %}">Begin maintenance</a>
+        {% endif %}
+    {% endif %}
 {% endblock %}

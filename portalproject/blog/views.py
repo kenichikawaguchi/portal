@@ -220,9 +220,11 @@ class CustomView(ListView):
         else:
             condition_title = None
 
-        if (type(category) is str) and len(category) != 0 and category[0]:
-            # category_name = Category.objects.get(id=category).name
-            condition_category = Q(category__name=category)
+        if len(category) != 0 and category[0]:
+            if category == "__no_category":
+                condition_category = Q(category__isnull=True)
+            else:
+                condition_category = Q(category__name=category)
         else:
             condition_category = None
 

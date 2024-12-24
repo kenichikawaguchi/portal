@@ -105,7 +105,13 @@
               {% if record.category %}
               <div class="row">
                 <div class="col-3">Category</div>
-                <div class="col-9"> {{ record.category.name }} </div>
+                <div class="col-9">
+                  <form method="POST" action="{% url 'blog:search' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="category" value="{{ record.category.name }}">
+                    <button class="btn btn-link ps-1" type="submit">{{ record.category.name }}</button>
+                  </form>
+                </div>
               </div>
               <hr>
               {% endif %}

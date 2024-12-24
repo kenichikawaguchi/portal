@@ -93,7 +93,6 @@ class SearchForm(forms.Form):
         initial='',
         label='Category',
         required=False,
-        choices=[ i[0] for i in Category.objects.all().order_by('name').distinct().values_list('name')],
         widget=forms.widgets.Select
     )
 
@@ -137,7 +136,10 @@ class SearchForm(forms.Form):
         self.fields['author'].widget.attrs['class'] = 'form-control'
         self.fields['title'].widget.attrs['class'] = 'form-control'
         self.fields['category'].widget.attrs['class'] = 'form-control'
-        self.fields['category'].choices=[ i[0] for i in Category.objects.all().order_by('name').distinct().values_list('name')]
+        choices = ["__no_category"]
+        for i in Category.objects.all().order_by('name').distinct().values_list('name'):
+            choices.append(i[0])
+        self.fields['category'].choices = choices
         self.initial['category'] = selected_category
         self.fields['content'].widget.attrs['class'] = 'form-control'
         self.fields['friends_post'].widget.attrs['class'] = 'form-check-input'

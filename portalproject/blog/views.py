@@ -125,9 +125,9 @@ class CustomView(ListView):
                 else:
                     friends_post = False
                 if (len(form_value) > 4) and form_value[4]:
-                    category = form_value[4]
+                    category = form_value[4].strip()
                 else:
-                    category = 0
+                    category = ''
                 if (len(form_value) > 5) and form_value[5]:
                     posted_from = form_value[5]
                 else:
@@ -194,7 +194,7 @@ class CustomView(ListView):
                 else:
                     friends_post = False
                 if (len(form_value) > 4) and form_value[4]:
-                    category = form_value[4]
+                    category = form_value[4].strip()
                 else:
                     category = ''
                 if (len(form_value) > 5) and form_value[5]:

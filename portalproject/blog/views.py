@@ -353,7 +353,7 @@ class ContactView(FormView):
         title = form.cleaned_data['title']
         message = form.cleaned_data['message']
 
-        subject = 'Message: {}'.format(title)
+        subject = '[' + self.request.META['HTTP_HOST'] + '] Message: {}'.format(title)
         message = \
             'sender: {0}\nmail: {1}\ntitle: {2}\nmessage:\n{3}'\
             .format(name, email, title, message)

@@ -25,7 +25,7 @@
                 Search Terms
               </button>
             </h2>
-            <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+            <div id="collapseOne" class="accordion-collapse collapse{% if search_words %} show{% endif %}" data-bs-parent="#accordionExample">
               <div class="accordion-body">
                 <form method="POST" action="{% url 'blog:search' %}">
                   {% csrf_token %}

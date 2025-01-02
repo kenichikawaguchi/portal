@@ -105,35 +105,43 @@ class CustomView(ListView):
         posted_from = ''
         posted_to = ''
 
+        search_words = False
         if 'form_value' in self.request.session:
             form_value = self.request.session['form_value']
             if form_value:
                 if (len(form_value) > 0) and form_value[0]:
                     author = form_value[0]
+                    search_words = True
                 else:
                     author = ''
                 if (len(form_value) > 1) and form_value[1]:
                     title = form_value[1]
+                    search_words = True
                 else:
                     title = ''
                 if (len(form_value) > 2) and form_value[2]:
                     content = form_value[2]
+                    search_words = True
                 else:
                     content = ''
                 if (len(form_value) > 3) and form_value[3]:
                     friends_post = form_value[3]
+                    search_words = True
                 else:
                     friends_post = False
                 if (len(form_value) > 4) and form_value[4]:
                     category = form_value[4].strip()
+                    search_words = True
                 else:
                     category = ''
                 if (len(form_value) > 5) and form_value[5]:
                     posted_from = form_value[5]
+                    search_words = True
                 else:
                     posted_from = ''
                 if (len(form_value) > 6) and form_value[6]:
                     posted_to = form_value[6]
+                    search_words = True
                 else:
                     posted_to = ''
 
@@ -150,6 +158,7 @@ class CustomView(ListView):
             'posted_to': posted_to,
         }
         search_form = SearchForm(initial=default_data)
+        context['search_words'] = search_words
         context['search_form'] = search_form
         context['category'] = category
         try:

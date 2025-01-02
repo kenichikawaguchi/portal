@@ -601,6 +601,6 @@ class LikesPopupView(DetailView):
 
 
 def csrf_failure(request, reason=""):
-    msg = "CSRF Error found and redirected to Top Page."
-    messages.warning(request, msg)
+    # msg = "CSRF Error found and redirected to Top Page."
+    # messages.warning(request, msg)
     return HttpResponseRedirect(reverse_lazy('blog:index'))

@@ -17,7 +17,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 from django.shortcuts import redirect, get_object_or_404
 from django.db.models import Q
-from django.http import HttpResponse, HttpResponseRedirect, Http404
+from django.http import HttpResponse, HttpResponseRedirect, Http404, HttpResponseForbidden
 
 import os
 import pytz
@@ -589,3 +589,9 @@ class LikesPopupView(DetailView):
             pass
 
         return HttpResponse(return_value, status=200)
+
+
+def csrf_failure(request, reason=""):
+    msg = "CSRF Error found and redirected to Top Page."
+    messages.warning(request, msg)
+    return HttpResponseRedirect(reverse_lazy('blog:index'))

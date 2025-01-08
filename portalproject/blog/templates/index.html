@@ -15,8 +15,8 @@
 
 {% block content %}
 <section>
-  <div class="container px-4 px-lg-5 mb-5">
-    <div class="row gx-4 gx-lg-5 justify-content-center">
+  <div class="container px-0 px-lg-5 mb-5">
+    <div class="row gx-1 gx-lg-5 justify-content-center">
       <div class="col-md-10 col-lg-8 col-xl-7">
         <div class="accordion" id="accordionExample">
           <div class="accordion-item">
@@ -26,10 +26,10 @@
               </button>
             </h2>
             <div id="collapseOne" class="accordion-collapse collapse{% if search_words %} show{% endif %}" data-bs-parent="#accordionExample">
-              <div class="accordion-body">
+              <div class="accordion-body table-responsive px-1 fs-6">
                 <form method="POST" action="{% url 'blog:search' %}">
                   {% csrf_token %}
-                  <table class="table caption-top">
+                  <table class="table table-sm caption-top">
                     <tbody>
                       <tr>
                         <th>{{ search_form.author.label }}:</th>
@@ -82,7 +82,7 @@
                       </tr>
                     </tbody>
                   </table>
-                  <input class="btn btn-danger" type="submit" id="reset" name="reset" value="reset">
+                  <input class="btn btn-danger mx-2" type="submit" id="reset" name="reset" value="reset">
                   <input class="btn btn-success" type="submit" id="button" name="button" value="search">
                 </form>
                 {% if form.errors.posted_from %}

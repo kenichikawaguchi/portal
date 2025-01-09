@@ -356,6 +356,13 @@ class ContactView(FormView):
     form_class = ContactForm
     success_url = reverse_lazy('blog:contact')
 
+    def get_form_kwargs(self):
+        kwargs = super(ContactView, self).get_form_kwargs()
+        if self.request.user.is_authenticated:
+            kwargs['initial']['name'] = self.request.user.username
+            kwargs['initial']['email'] = self.request.user.email
+        return kwargs
+
     def form_valid(self, form):
         name = form.cleaned_data['name']
         email = form.cleaned_data['email']

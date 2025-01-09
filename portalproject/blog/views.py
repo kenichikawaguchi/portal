@@ -351,10 +351,14 @@ class BlogDetail(DetailView):
         return context
 
 
+class ContactSentView(TemplateView):
+    template_name = "contact_sent.html"
+
+
 class ContactView(FormView):
     template_name = "contact.html"
     form_class = ContactForm
-    success_url = reverse_lazy('blog:contact')
+    success_url = reverse_lazy('blog:contact_sent')
 
     def get_form_kwargs(self):
         kwargs = super(ContactView, self).get_form_kwargs()
@@ -383,7 +387,7 @@ class ContactView(FormView):
                                 to=to_list)
         message.send()
         messages.success(
-            self.request, 'Message was sent properly')
+            self.request, 'Message was sent properly. subject:{}'.format(title))
 
         return super().form_valid(form)
 

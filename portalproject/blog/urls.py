@@ -10,6 +10,7 @@ urlpatterns = [
     path('search/', views.CustomView.as_view(), name='search'),
     path('blog-detail/<int:pk>/', views.BlogDetail.as_view(), name='blog_detail'),
     path('contact/', views.ContactView.as_view(), name='contact'),
+    path('contact-sent/', views.ContactSentView.as_view(), name='contact_sent'),
     path('post/', views.CreateBlogPostView.as_view(), name='post'),
     path('post_done/', views.PostSuccessView.as_view(), name='post_done'),
     path('delete/<int:pk>/', views.BlogDeleteView.as_view(), name='delete'),

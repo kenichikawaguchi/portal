@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import BlogPost, Comment, Tag, Like, Category
+from .models import BlogPost, Comment, Tag, Like, Category, ClientIP
 
 from markdownx.admin import MarkdownxModelAdmin
 
@@ -21,3 +21,4 @@ admin.site.register(Comment, MarkdownxModelAdmin)
 admin.site.register(Tag)
 admin.site.register(Category)
 admin.site.register(Like, LikeAdmin)
+admin.site.register(ClientIP)

@@ -210,6 +210,16 @@ class Tag(models.Model):
         return f'{self.pk} {self.name}'
 
 
+class ClientIP(models.Model):
+    ip = models.CharField(verbose_name="IP Address", max_length=32)
+    page = models.CharField(verbose_name="Access Page", max_length=32)
+    user = models.ForeignKey(CustomUser, verbose_name="User", blank=True, null=True, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(verbose_name="Created at", auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.pk} {self.ip} {self.page} {self.user} {self.created_at}'
+
+
 @receiver(post_delete,sender=BlogPost)
 def delete_photo(sender, instance, **kwargs):
     if instance.photo:

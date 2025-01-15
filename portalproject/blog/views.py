@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.views.generic import ListView, DetailView, CreateView, TemplateView
-from .models import BlogPost, Comment, Like, Category
+from .models import BlogPost, Comment, Like, Category, ClientIP
 from accounts.models import CustomUser, Connection
 
 from django.views.generic import FormView, DeleteView, UpdateView
@@ -25,6 +25,16 @@ from django.utils import timezone
 import json
 
 import datetime
+from ipware import get_client_ip
+
+
+def save_clientIP(request):
+    client_addr, _ = get_client_ip(request)
+    clientIP = ClientIP.objects.create(ip=client_addr, page=request.get_full_path())
+    if request.user.id:
+        clientIP.user = request.user
+        clientIP.save()
+    return clientIP
 
 
 def Q_open():
@@ -104,6 +114,8 @@ class CustomView(ListView):
         category = ''
         posted_from = ''
         posted_to = ''
+
+        save_clientIP(self.request)
 
         search_words = False
         if 'form_value' in self.request.session:
@@ -290,6 +302,7 @@ class BlogDetail(DetailView):
 
     def get(self, request, *args, **kwargs):
         try:
+            save_clientIP(request)
             result = super().get(request, *args, **kwargs)
             blogpost = self.object
         except Exception as e:
@@ -361,6 +374,7 @@ class ContactView(FormView):
     success_url = reverse_lazy('blog:contact_sent')
 
     def get_form_kwargs(self):
+        save_clientIP(self.request)
         kwargs = super(ContactView, self).get_form_kwargs()
         if self.request.user.is_authenticated:
             kwargs['initial']['name'] = self.request.user.username
@@ -372,11 +386,12 @@ class ContactView(FormView):
         email = form.cleaned_data['email']
         title = form.cleaned_data['title']
         message = form.cleaned_data['message']
+        client_addr, _ = get_client_ip(self.request)
 
         subject = '[' + self.request.META['HTTP_HOST'] + '] Message: {}'.format(title)
         message = \
-            'sender: {0}\nmail: {1}\ntitle: {2}\nmessage:\n{3}'\
-            .format(name, email, title, message)
+            'client_addr: {4}\nsender: {0}\nmail: {1}\ntitle: {2}\nmessage:\n{3}'\
+            .format(name, email, title, message, client_addr)
 
         from_email = settings.EMAIL_ADMIN
         to_list = [settings.EMAIL_ADMIN]
@@ -399,10 +414,8 @@ class CreateBlogPostView(CreateView):
 
     def get_form_kwargs(self, *args, **kwargs):
         kwgs = super().get_form_kwargs(*args, **kwargs)
-        print("kwgs")
+        save_clientIP(self.request)
         kwgs["initial"]["category"] = Category.objects.filter(owner=self.request.user)
-        print(kwgs)
-        # kwgs["user"] = self.requst.user
         return kwgs
 
     def form_valid(self, form):
@@ -429,6 +442,7 @@ class BlogDeleteView(DeleteView):
     success_url = reverse_lazy('blog:index')
 
     def delete(self, request, *args, **kwargs):
+        save_clientIP(request)
         return super().delete(request, *args, **kwargs)
 
 @method_decorator(login_required,name='dispatch')
@@ -440,6 +454,7 @@ class UpdateBlogPostView(UpdateView):
     def get_form_kwargs(self, *args, **kwargs):
         kwgs = super().get_form_kwargs(*args, **kwargs)
         kwgs["initial"]["category"] = Category.objects.filter(owner=self.request.user)
+        save_clientIP(self.request)
         return kwgs
 
     def form_valid(self, form):

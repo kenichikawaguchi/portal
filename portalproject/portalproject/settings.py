@@ -212,6 +212,9 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+
+    # 'geoip2_extras.middleware.GeoIP2Middleware',
+
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -222,6 +225,7 @@ MIDDLEWARE = [
     'tz_detect.middleware.TimezoneMiddleware',
 
     'maintenance_mode.middleware.MaintenanceModeMiddleware',
+
 ]
 
 ROOT_URLCONF = 'portalproject.urls'
@@ -410,3 +414,10 @@ MAINTENANCE_MODE_IGNORE_ADMIN_SITE = True
 MAINTENANCE_MODE_IGNORE_SUPERUSER = True
 
 CSRF_FAILURE_VIEW = 'blog.views.csrf_failure'
+
+if env.get_value('GEOIP', default=None):
+    GEOIP = env('GEOIP')
+else:
+    GEOIP = "/usr/local/share/GeoIP"
+
+GEOIP_PATH = os.path.join(GEOIP)

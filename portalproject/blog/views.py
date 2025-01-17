@@ -27,10 +27,23 @@ import json
 import datetime
 from ipware import get_client_ip
 
+from django.contrib.gis.geoip2 import GeoIP2
 
 def save_clientIP(request):
     client_addr, _ = get_client_ip(request)
-    clientIP = ClientIP.objects.create(ip=client_addr, page=request.get_full_path())
+    # client_addr = "66.249.66.16"
+    g = GeoIP2()
+    try:
+        city_dict = g.city(client_addr)
+        city = city_dict['city']
+        country_code = city_dict['country_code']
+        country_name = city_dict['country_name']
+    except Exception as e:
+        print(e)
+        city = None
+        country_code = None
+        country_name = None
+    clientIP = ClientIP.objects.create(ip=client_addr, city=city, country_code=country_code, country_name=country_name, page=request.get_full_path())
     if request.user.id:
         clientIP.user = request.user
         clientIP.save()

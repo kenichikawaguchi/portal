@@ -16,6 +16,7 @@ class BlogPostAdmin(MarkdownxModelAdmin):
 
 
 class ClientIPAdmin(admin.ModelAdmin):
+    list_display = ['created_at', 'country_name', 'city', 'page', 'user', 'ip']
     readonly_fields = ['created_at']
 
 

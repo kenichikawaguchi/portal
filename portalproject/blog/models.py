@@ -215,7 +215,7 @@ class ClientIP(models.Model):
     city = models.CharField(verbose_name="City", blank=True, null=True, max_length=32)
     country_code = models.CharField(verbose_name="Country Code", blank=True, null=True, max_length=32)
     country_name = models.CharField(verbose_name="Country Name", blank=True, null=True, max_length=32)
-    page = models.CharField(verbose_name="Access Page", max_length=32)
+    page = models.CharField(verbose_name="Access Page", max_length=511)
     user = models.ForeignKey(CustomUser, verbose_name="User", blank=True, null=True, on_delete=models.CASCADE)
     created_at = models.DateTimeField(verbose_name="Created at", auto_now_add=True)
 

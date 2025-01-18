@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, re_path
 
 from . import views
 
@@ -22,4 +22,5 @@ urlpatterns = [
     path('likes/popup/<int:pk>/', views.LikesPopupView.as_view(), name='likes_popup'),
     path('likes/create/<int:blogpost_id>/<int:user_id>/', views.CreateLikeView.as_view(), name='likes_create'),
     path('likes/delete/<int:blogpost_id>/<int:user_id>/', views.DeleteLikeView.as_view(), name='likes_delete'),
+    re_path(r'^.*$', views.MiscView.as_view(), name='misc'),
 ]

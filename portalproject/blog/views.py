@@ -31,7 +31,6 @@ from django.contrib.gis.geoip2 import GeoIP2
 
 def save_clientIP(request):
     client_addr, _ = get_client_ip(request)
-    # client_addr = "66.249.66.16"
     g = GeoIP2()
     try:
         city_dict = g.city(client_addr)
@@ -39,7 +38,6 @@ def save_clientIP(request):
         country_code = city_dict['country_code']
         country_name = city_dict['country_name']
     except Exception as e:
-        print(e)
         city = None
         country_code = None
         country_name = None
@@ -400,11 +398,21 @@ class ContactView(FormView):
         title = form.cleaned_data['title']
         message = form.cleaned_data['message']
         client_addr, _ = get_client_ip(self.request)
+        g = GeoIP2()
+        try:
+            city_dict = g.city(client_addr)
+            city = city_dict['city']
+            country_code = city_dict['country_code']
+            country_name = city_dict['country_name']
+        except Exception as e:
+            city = None
+            country_code = None
+            country_name = None
 
         subject = '[' + self.request.META['HTTP_HOST'] + '] Message: {}'.format(title)
         message = \
-            'client_addr: {4}\nsender: {0}\nmail: {1}\ntitle: {2}\nmessage:\n{3}'\
-            .format(name, email, title, message, client_addr)
+            'client info.: {4}, {5}, {6}, {7}\nsender: {0}\nmail: {1}\ntitle: {2}\nmessage:\n{3}'\
+            .format(name, email, title, message, client_addr, city, country_code, country_name)
 
         from_email = settings.EMAIL_ADMIN
         to_list = [settings.EMAIL_ADMIN]
@@ -637,6 +645,16 @@ class LikesPopupView(DetailView):
             pass
 
         return HttpResponse(return_value, status=200)
+
+class MiscView(TemplateView):
+    template_name = "misc.html"
+
+    def get(self, request, **kwargs):
+        clientIP = save_clientIP(self.request)
+        context = {
+            'clientIP': clientIP,
+        }
+        return self.render_to_response(context)
 
 
 def csrf_failure(request, reason=""):

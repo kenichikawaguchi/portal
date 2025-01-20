@@ -90,17 +90,6 @@
         </div>
       </div>
     </nav>
-    <header class="masthead"  style="background-image: url({% static 'assets/img/bg.jpeg' %})">
-      <div class="container position-relative px-4 px-lg-5">
-        <div class="row gx-4 gx-lg-5 justify-content-center">
-          <div class="col-md-10 col-lg-8 col-xl-7">
-            <div class="site-heading">
-              {% block header %}{% endblock %}
-            </div>
-          </div>
-        </div>
-      </div>
-    </header>
 {% if messages %}
 <div class="container">
 <ul class="messages" style="list-style: none;">
@@ -114,21 +103,6 @@
 {% endif %}
 <article class="mb-4">
   <div class="container">
-    <div class="row justify-content-center">
-      <section>
-        <div class="container px-4 px-lg-5 mb-2">
-          <div class="row gx-4 gx-lg-5 justify-content-center">
-            <div class="col-md-10 col-lg-8 col-xl-7">
-            {% if facebook %}
-              <a class="fb-share-button" href="{{ request.build_absolute_uri }}" data-layout="button_count" data-size="large"></a>
-              <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-size="large" data-show-count="false">Tweet</a>
-              <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-            {% endif %}
-            </div>
-          </div>
-        </div>
-      </section>
-    </div>
     <div class="row justify-content-center">
         {% block content %}{% endblock %}
     </div>

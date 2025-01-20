@@ -657,6 +657,10 @@ class MiscView(TemplateView):
         return self.render_to_response(context)
 
 
+class FireworksView(TemplateView):
+    template_name = "fireworks.html"
+
+
 def csrf_failure(request, reason=""):
     # msg = "CSRF Error found and redirected to Top Page."
     # messages.warning(request, msg)

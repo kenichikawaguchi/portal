@@ -421,3 +421,10 @@ else:
     GEOIP = "/usr/local/share/GeoIP"
 
 GEOIP_PATH = os.path.join(GEOIP)
+
+MARKDOWNX_MARKDOWN_EXTENSIONS = [
+    'markdown.extensions.extra',
+    'markdown.extensions.codehilite',
+    'markdown.extensions.toc',
+    'markdown.extensions.nl2br',
+]

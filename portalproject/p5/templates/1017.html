@@ -1,0 +1,24 @@
+var words = ["I", "love", "programming", "with", "JavaScript"];
+var colors = [
+  [63, 184, 175],
+  [127, 199, 175],
+  [218, 216, 167],
+  [255, 158, 157],
+  [255, 61, 127],
+];
+
+function setup() {
+  createCanvas(800, 300);
+  textAlign(CENTER, CENTER);
+  frameRate(3);
+}
+
+function draw() {
+  var currentIndex = frameCount % words.length;
+
+  background(colors[currentIndex]);
+  fill(255);
+  textSize(45);
+  text(currentIndex, width / 2 - 200, height / 2);
+  text(words[currentIndex], width / 2 + 45, height / 2);
+}

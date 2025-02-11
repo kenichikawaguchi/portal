@@ -79,6 +79,7 @@ INSTALLED_APPS = [
 
     'accounts.apps.AccountsConfig',
     'blog.apps.BlogConfig',
+    'p5.apps.P5Config',
     'django_extensions',
 
     'django.contrib.sites',
@@ -428,3 +429,5 @@ MARKDOWNX_MARKDOWN_EXTENSIONS = [
     'markdown.extensions.toc',
     'markdown.extensions.nl2br',
 ]
+
+APPEND_SLASH = True

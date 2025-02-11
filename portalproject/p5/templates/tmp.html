@@ -1,0 +1,23 @@
+{% extends 'p5base.html' %}
+
+{% load p5_extras %}
+{% block content %}
+{% with filename=id|addstr:".html" %}
+<h1>Lesson {{ id }}</h1>
+<script>
+  eruda.init();
+  {% include filename %}
+</script>
+{% endwith %}
+<script>
+function requestMotionPermission() {
+  if (typeof DeviceMotionEvent.requestPermission === 'function') {
+    DeviceMotionEvent.requestPermission()
+      .then(permissionState => {
+        if (permissionState === 'granted') {
+        }
+      });
+  }
+}
+</script>
+{% endblock %}

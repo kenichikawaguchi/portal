@@ -1,0 +1,14 @@
+function setup(){
+  createCanvas(800, 300);
+  textAlign(CENTER, CENTER);
+  frameRate(6);
+}
+
+function draw(){
+  background(220);
+  fill(237, 34, 93);
+  textSize(36);
+
+  var fps = parseInt(frameRate(), 10);
+  text("frameRate: " + fps + ", frameCount: " + frameCount, width / 2, height / 2);
+}

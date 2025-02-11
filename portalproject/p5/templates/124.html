@@ -1,0 +1,14 @@
+function setup() {
+  createCanvas(800, 300);
+  noStroke();
+  angleMode(DEGREES);
+}
+
+function draw() {
+  background(220);
+  fill(237, 34, 83);
+  translate(width/2, height/2);
+  rotate(frameCount/2);
+  rect(0, 0, 50, 50);
+  rect(50, 50, 50, 50);
+}

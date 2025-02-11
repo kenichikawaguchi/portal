@@ -12,5 +12,6 @@ urlpatterns = [
     path('accounts/', include('allauth.urls')),
     path('tz_detect/', include('tz_detect.urls')),
     path('markdownx/', include('markdownx.urls')),
+    path('p5/', include('p5.urls')),
 ]  +  static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 urlpatterns.append(re_path(r'^.*$', blog_views.MiscView.as_view(), name='misc'))

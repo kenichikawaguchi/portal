@@ -248,9 +248,9 @@
           }
           else{
             if(user['icon'] != ""){
-              target.innerHTML += `<a href="{% url 'accounts:target_user' %}${user['username']}"><img src="${user['icon']}" class="rounded-circle" width="50"> ${user['username']}</a> `;
+              target.innerHTML += `<a href="{% url 'accounts:target_user' %}${user['username']}/"><img src="${user['icon']}" class="rounded-circle" width="50"> ${user['username']}</a> `;
             } else {
-              target.innerHTML += `<a href="{% url 'accounts:target_user' %}${user['username']}">${user['username']}</a> `;
+              target.innerHTML += `<a href="{% url 'accounts:target_user' %}${user['username']}/">${user['username']}</a> `;
             }
             // const created_at_tz = new Date(user['created_at']).toString()
             // target.innerHTML += `at ${user['created_at']}</p>`;

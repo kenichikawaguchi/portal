@@ -125,7 +125,8 @@
               {% endif %}
               <h3 class="post-subtitle">
                 <span style="font-size : 14pt">
-                  {{ record.get_text_markdownx|safe }}
+                  {% load markdown_extras %}
+                  {{ record.get_text_markdownx|md_preview_first_line|safe }}
                 </span>
               </h3>
               {% if record.photo or record.photo2 or record.photo3 %}

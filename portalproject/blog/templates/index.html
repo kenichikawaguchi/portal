@@ -123,12 +123,14 @@
               </div>
               <hr>
               {% endif %}
+              {% comment %}
               <h3 class="post-subtitle">
                 <span style="font-size : 14pt">
                   {% load markdown_extras %}
                   {{ record.get_text_markdownx|md_preview_first_line|safe }}
                 </span>
               </h3>
+              {% endcomment %}
               {% if record.photo or record.photo2 or record.photo3 %}
               <div class="row">
                 {% if record.photo %}

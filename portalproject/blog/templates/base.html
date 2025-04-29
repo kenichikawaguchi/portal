@@ -21,6 +21,14 @@
     <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
     <link href="{% static 'css/mystyles.css' %}" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/p5@1.11.2/lib/p5.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
+    <!-- and it's easy to individually load additional languages -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/go.min.js"></script>
+
+    <script>hljs.highlightAll();</script>
+    <script>hljs.initHighlightingOnLoad();</script>
   </head>
   <body>
     <nav class="navbar navbar-expand-lg navbar-light" id="mainNav">

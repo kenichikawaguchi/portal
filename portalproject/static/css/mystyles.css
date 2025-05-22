@@ -141,3 +141,4 @@ table, th, td {
     padding: 10px;      /* 余白指定 */
 }
 
+table td:nth-of-type(1) { white-space: nowrap;}

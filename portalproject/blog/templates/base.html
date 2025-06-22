@@ -63,10 +63,12 @@
                 class="nav-link px-lg-3 py-3 py-lg-4">Log Out</a>
             </li>
             {% else %}
+            {% if ACCOUNT_SIGNUP_ENABLED %}
             <li class="nav-item">
               <a href="{% url 'account_signup' %}"
                 class="nav-link px-lg-3 py-3 py-lg-4">Sign Up</a>
             </li>
+            {% endif %}
             <li class="nav-item">
               <a href="{% url 'account_login' %}"
                 class="nav-link px-lg-3 py-3 py-lg-4">Log In</a>
@@ -79,10 +81,6 @@
             <li class="nav-item">
               <a class="nav-link px-lg-3 py-3 py-lg-4"
                   href="{% url 'blog:fireworks' %}">Fireworks</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link px-lg-3 py-3 py-lg-4"
-                  href="{% url 'p5:app' 'block' %}">Brick Breaker</a>
             </li>
             {% if user.is_authenticated %}
               {% if user.icon %}

@@ -50,6 +50,77 @@ Below is the instruction for installing and setting up your app.
 
 .. ***
 
+Preparation for REST API Access Authentication
+============
+
+Below is how to create Token for REST API.
+
+1. Migrate
+
+.. code-block:: sh
+
+  $ python manage.py migrate
+
+.. ***
+
+2. Create Token
+
+.. code-block:: sh
+
+  $ python manage.py drf_create_token <username>
+
+.. ***
+
+3. Confirm your Token
+
+.. code-block:: sh
+
+  $ python manage.py shell
+
+.. ***
+
+.. code-block:: python
+
+  from rest_framework.authtoken.models import Token
+  Token.objects.all()
+
+.. ***
+
+Example of Post Blogpost
+============
+
+.. code-block:: python
+
+  import requests
+
+  # ===== Setting =====
+  API_URL = "http://127.0.0.1:8000/api/blogpost/"  # API ENDPOINT
+  TOKEN = "<your token here>"           # Token created with drf_create_token
+
+  headers = {
+      "Authorization": f"Token {TOKEN}",
+      "Content-Type": "application/json",
+  }
+
+  # ===== Data for post =====
+  data = {
+      "title": "python script posting",
+      "content": "This is an article posted from python script.",
+      "category": 1  # If you need. Otherwise: None
+  }
+
+  # ===== POST Request =====
+  response = requests.post(API_URL, json=data, headers=headers)
+
+  # ===== Confirm the response =====
+  if response.status_code == 201:
+      print("Success")
+      print(response.json())
+  else:
+      print("Failed")
+      print(response.status_code, response.text)
+.. ***
+
 License
 =======
 

@@ -208,6 +208,9 @@ INSTALLED_APPS = [
     'tz_detect',
 
     'markdownx',
+    'rest_framework',
+    'rest_framework.authtoken',
+    'api',
 ]
 
 MIDDLEWARE = [
@@ -437,4 +440,13 @@ ACCOUNT_SIGNUP_ENABLED = False
 ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_USER_ONLY = False
 ACCOUNT_EMAIL_CONFIRMATION_EMAIL = True
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+
+}
 

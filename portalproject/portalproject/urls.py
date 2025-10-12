@@ -7,6 +7,7 @@ from blog import views as blog_views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('blog.urls')),
+    path('api/', include('api.urls')),
     path('maintenance-mode/', include('maintenance_mode.urls')),
     path('accounts/profile/', include('accounts.urls')),
     path('accounts/', include('allauth.urls')),

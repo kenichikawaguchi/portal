@@ -1,6 +1,6 @@
 from rest_framework import viewsets
-from blog.models import BlogPost
-from .serializers import BlogPostSerializer
+from blog.models import BlogPost, Category
+from .serializers import BlogPostSerializer, CategorySerializer
 
 
 class BlogPostViewSet(viewsets.ModelViewSet):
@@ -12,4 +12,9 @@ class BlogPostViewSet(viewsets.ModelViewSet):
 
     def perform_update(self, serializer):
         serializer.save(user=self.request.user)  # 更新時も必要なら
+
+
+class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
 
